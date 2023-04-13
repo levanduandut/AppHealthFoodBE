@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, STRING
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -14,9 +14,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    email: DataTypes.STRING,
+    password: DataTypes.STRING,
+    fullName: DataTypes.STRING,
+    avatar: DataTypes.STRING,
+    gender: DataTypes.BOOLEAN,
+    age: DataTypes.INTEGER,
+    address: DataTypes.STRING,
+    height: DataTypes.FLOAT,
+    weight: DataTypes.FLOAT,
+    sick: DataTypes.STRING,
+    heartBeat: DataTypes.FLOAT,
+    bloodPressureTh: DataTypes.FLOAT,
+    bloodPressureTr: DataTypes.FLOAT,
+    bloodSugar: DataTypes.FLOAT,
+    roleId: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
