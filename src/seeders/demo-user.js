@@ -23,6 +23,8 @@ module.exports = {
       password: '123123',
       fullName: "Le Van Duan",
       age: 23,
+      height:167,
+      weight:50,
       createdAt: new Date(),
       updatedAt: new Date()
     }]);
