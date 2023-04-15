@@ -2,8 +2,10 @@ import { where } from "sequelize";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { raw } from "body-parser";
-var jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+
 
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
@@ -24,7 +26,15 @@ let handleUserLogin = (email, password) => {
                 if (user) {
                     let check = bcrypt.compareSync(password, user.password);
                     if (check) {
-                        let jwtToken = await jwt.sign({ email: email }, 'tokenLogin');
+
+                        let payload = { id: user.id, roleID: user.roleID, email: email }
+                        let jwtToken = null;
+                        try {
+                            jwtToken = await jwt.sign(payload, process.env.JWT_SECRET);
+                        } catch (error) {
+                            console.log(error)
+                        }
+
                         let userx = await db.User.findOne({
                             where: {
                                 id: user.id,
@@ -34,6 +44,7 @@ let handleUserLogin = (email, password) => {
                             userx.jwtToken = jwtToken;
                             await userx.save();
                         }
+
                         userData.errCode = 0;
                         userData.errmessage = null;
                         userData.jwtToken = jwtToken;
@@ -85,45 +96,30 @@ let hashUserPassword = (password) => {
         }
     });
 };
-let updateUserData = (data) => {
+let verifyToken = (token) => {
+    let key = process.env.JWT_SECRET;
+    let data = null;
+    try {
+        let encoded = jwt.verify(token, key);
+        data = encoded;
+    } catch (error) {
+        console.log(error)
+    }
+    return data;
+}
+
+let handleUserInfo = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id) {
-                resolve({
-                    errCode: 1,
-                    message: "Khong cos id",
-                    data,
-                });
-            } else {
-                let user = await db.User.findOne({
-                    where: {
-                        id: data.id,
-                    },
-                });
-                if (user) {
-                    user.firstName = data.firstName;
-                    user.lastName = data.lastName;
-                    user.address = data.address;
-
-                    await user.save();
-                    resolve({
-                        errCode: 0,
-                        message: "da sua",
-                        data,
-                    });
-                } else {
-                    resolve({
-                        errCode: 2,
-                        message: "Khong sua dc ",
-                    });
-                }
-            }
-        } catch (error) {
-            reject(error);
+            let data = verifyToken(token)
+            resolve(data);
+        } catch (e) {
+            reject(e);
         }
     });
-};
+}
 
 module.exports = {
     handleUserLogin,
+    handleUserInfo,
 }
