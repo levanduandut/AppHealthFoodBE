@@ -15,6 +15,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      jwtToken: {
+        type: Sequelize.TEXT
+      },
       fullName: {
         type: Sequelize.STRING
       },

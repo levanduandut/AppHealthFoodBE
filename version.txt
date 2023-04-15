@@ -4,3 +4,4 @@ npm install --save-dev sequelize-cli@6.6.0
 npm install --save sequelize@6.31.0 =>>> cmd :  node_modules/.bin/sequelize init
 npm install --save mysql2@3.2.0
 npm install --save bcryptjs@2.4.3
+npm install --save jsonwebtoken@9.0.0
