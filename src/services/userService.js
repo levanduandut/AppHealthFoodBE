@@ -44,23 +44,22 @@ let handleUserLogin = (email, password) => {
                             userx.jwtToken = jwtToken;
                             await userx.save();
                         }
-
                         userData.errCode = 0;
                         userData.errmessage = null;
                         userData.jwtToken = jwtToken;
                         delete user.password;// Hien trhong tin user
                     } else {
                         userData.errCode = 3;
-                        userData.errmessage = "Wrong password";
+                        userData.errmessage = "Sai mật khẩu !";
                     }
                 } else {
                     userData.errCode = 2;
-                    userData.errmessage = "Tai khoan khong ton tai ";
+                    userData.errmessage = "Tài khoản không tồn tại !";
                 }
             } else {
                 // return error
                 userData.errCode = 1;
-                userData.errmessage = "Mail khong ton tai ";
+                userData.errmessage = "Mail không tồn tại";
             }
             resolve(userData);
         } catch (error) {
@@ -112,7 +111,13 @@ let handleUserInfo = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = verifyToken(token)
-            resolve(data);
+            let user = await db.User.findOne({ where: { id: data.id }, raw: true });
+            if (user) {
+                delete user.password;
+                resolve(user);
+            } else {
+                resolve({});
+            }
         } catch (e) {
             reject(e);
         }

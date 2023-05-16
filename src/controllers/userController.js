@@ -23,9 +23,9 @@ let handleInfo = async (req, res) => {
             message: "No jwt token"
         })
     }
-    let userData = await userService.handleUserInfo(token)
+    let user = await userService.handleUserInfo(token)
     return res.status(200).json({
-        data: userData
+        user
     })
 }
 module.exports = {
