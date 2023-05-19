@@ -14,10 +14,20 @@ let handleGetAllUsers = async (req, res) => {
     });
 };
 let handleEditUser = async (req, res) => {
-
+    let data = req.body;
+    let message = await adminService.updateUserData(data);
+    return res.status(200).json(message);
 }
 let handleDeleteUser = async (req, res) => {
-
+    let idUser = req.body.id;
+    if (idUser) {
+        let mes = await adminService.deleteUserData(idUser);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
 }
 module.exports = {
     handleCreateNewUser,

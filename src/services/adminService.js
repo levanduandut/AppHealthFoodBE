@@ -9,7 +9,7 @@ let createNewUser = (data) => {
             if (check) {
                 resolve({
                     errCode: 1,
-                    message: "Trung email",
+                    message: "Đã có tài khoản đăng ký bằng email này !",
                 });
             }
             else {
@@ -18,8 +18,8 @@ let createNewUser = (data) => {
                     email: data.email,
                     password: hashPassword,
                     fullName: data.fullName,
-                    // lastName: data.lastName,
-                    // address: data.address,
+                    age: data.age,
+                    address: data.address,
                     // phoneNumber: data.phoneNumber,
                     gender: data.gender === "1" ? true : false,
                     // image: DataTypes.STRING,
@@ -41,9 +41,14 @@ let createNewUser = (data) => {
 let getAllUser = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
+
             let users = "";
             if (!userId) {
                 users = await db.User.findAll({
+                    order: [
+                        // ['age', 'DESC'],
+                        ["email", "ASC"],
+                    ],
                     attributes: {
                         exclude: ["password"],
                     },
@@ -65,7 +70,69 @@ let getAllUser = (userId) => {
         }
     });
 };
+let updateUserData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong co id",
+                    data,
+                });
+            } else {
+                let user = await db.User.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                });
+                if (user) {
+                    user.fullName = data.fullName;
+                    user.gender = data.gender;
+                    user.roleId = data.roleId;
+                    user.age = data.age;
 
+                    await user.save();
+                    resolve({
+                        errCode: 0,
+                        message: "da sua",
+                        data,
+                    });
+                } else {
+                    resolve({
+                        errCode: 2,
+                        message: "Khong sua dc ",
+                    });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let deleteUserData = (idUser) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({ where: { id: idUser } });
+            if (!user) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong ton tai",
+                    idUser,
+                });
+            }
+            await db.User.destroy({
+                where: { id: idUser },
+            });
+            resolve({
+                errCode: 0,
+                message: "Delete OK",
+                idUser,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -97,4 +164,6 @@ let checkUserEmail = userEmail => {
 module.exports = {
     createNewUser,
     getAllUser,
+    updateUserData,
+    deleteUserData,
 }

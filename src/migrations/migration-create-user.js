@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       gender: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.INTEGER
       },
       age: {
         type: Sequelize.INTEGER

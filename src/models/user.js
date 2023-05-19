@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     jwtToken:DataTypes.TEXT,
     fullName: DataTypes.STRING,
     avatar: DataTypes.STRING,
-    gender: DataTypes.BOOLEAN,
+    gender: DataTypes.INTEGER,
     age: DataTypes.INTEGER,
     address: DataTypes.STRING,
     height: DataTypes.FLOAT,
