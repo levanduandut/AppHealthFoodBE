@@ -46,7 +46,7 @@ let getAllUser = (userId) => {
             if (!userId) {
                 users = await db.User.findAll({
                     order: [
-                        // ['age', 'DESC'],
+                        ['age', 'DESC'],
                         ["email", "ASC"],
                     ],
                     attributes: {
