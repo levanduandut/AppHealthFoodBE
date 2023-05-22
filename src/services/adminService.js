@@ -1,6 +1,75 @@
+import { where } from "sequelize";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
+import { raw } from "body-parser";
+import jwt from 'jsonwebtoken';
+require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+
+let handleUserLogin = (email, password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            let userData = {};
+            let isExist = await checkUserEmail(email);
+            if (isExist) {
+                // coparepass
+                let user = await db.User.findOne({
+                    attributes: ["id", "email", "password", "roleID", "jwtToken"],
+                    where: {
+                        email: email,
+                    },
+                    raw: true,
+                });
+
+                if (user) {
+                    let check = bcrypt.compareSync(password, user.password);
+                    if (user.roleID != 1) {
+                        userData.errCode = 5;
+                        userData.errmessage = "Không phải tài khoản Admin !";
+                    }
+                    else if (user.roleID == 1 && check) {
+
+                        let payload = { id: user.id, roleID: user.roleID, email: email }
+                        let jwtToken = null;
+                        try {
+                            jwtToken = await jwt.sign(payload, process.env.JWT_SECRET);
+                        } catch (error) {
+                            console.log(error)
+                        }
+
+                        let userx = await db.User.findOne({
+                            where: {
+                                id: user.id,
+                            },
+                        });
+                        if (userx) {
+                            userx.jwtToken = jwtToken;
+                            await userx.save();
+                        }
+                        userData.errCode = 0;
+                        userData.errmessage = null;
+                        userData.jwtToken = jwtToken;
+                        delete user.password;// Hien trhong tin user
+                    } else {
+                        userData.errCode = 3;
+                        userData.errmessage = "Sai mật khẩu !";
+                    }
+                } else {
+                    userData.errCode = 2;
+                    userData.errmessage = "Tài khoản không tồn tại !";
+                }
+            } else {
+                // return error
+                userData.errCode = 1;
+                userData.errmessage = "Email không tồn tại";
+            }
+            resolve(userData);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
 let createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -161,9 +230,21 @@ let checkUserEmail = userEmail => {
         }
     });
 }
+let verifyToken = (token) => {
+    let key = process.env.JWT_SECRET;
+    let data = null;
+    try {
+        let encoded = jwt.verify(token, key);
+        data = encoded;
+    } catch (error) {
+        console.log(error)
+    }
+    return data;
+}
 module.exports = {
     createNewUser,
     getAllUser,
     updateUserData,
     deleteUserData,
+    handleUserLogin,
 }

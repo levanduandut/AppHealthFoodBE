@@ -29,9 +29,26 @@ let handleDeleteUser = async (req, res) => {
         });
     }
 }
+let handleLogin = async (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    if (!email || !password) {
+        return res.status(200).json({
+            errCode: 1,
+            message: "Email or Password missing !"
+        })
+    }
+    let userData = await adminService.handleUserLogin(email, password)
+    return res.status(200).json({
+        errCode: userData.errCode,
+        message: userData.errmessage,
+        token: userData.jwtToken,
+    })
+}
 module.exports = {
     handleCreateNewUser,
     handleGetAllUsers,
     handleEditUser,
     handleDeleteUser,
+    handleLogin,
 }
