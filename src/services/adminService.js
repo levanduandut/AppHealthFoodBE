@@ -6,6 +6,79 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let createNewIngredient = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let calo = Number(data.calo)
+            let protein = Number(data.protein)
+            let fat = Number(data.fat)
+            let carb = Number(data.carb)
+            let fiber = Number(data.fiber)
+            let cholesterol = Number(data.cholesterol)
+            let canxi = Number(data.canxi)
+            let photpho = Number(data.photpho)
+            let fe = Number(data.fe)
+            let natri = Number(data.natri)
+            let kali = Number(data.kali)
+            let betacaroten = Number(data.betacaroten)
+            let vita = Number(data.vita)
+            let vitb1 = Number(data.vitb1)
+            let vitc = Number(data.vitc)
+            if (!data) {
+                resolve({
+                    errCode: 1,
+                    message: "Error !",
+                });
+            }
+            else {
+                await db.Ingredient.create({
+                    name: data.name,
+                    category: data.category,
+                    unit: data.unit,
+                    calo: calo,
+                    protein: protein,
+                    fat: fat,
+                    carb: carb,
+                    fiber: fiber,
+                    cholesterol: cholesterol,
+                    canxi: canxi,
+                    photpho: photpho,
+                    fe: fe,
+                    natri: natri,
+                    kali: kali,
+                    betacaroten: betacaroten,
+                    vita: vita,
+                    vitb1: vitb1,
+                    vitc: vitc,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Save Ok",
+                });
+            }
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let deleteAllIngredient = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let message = "";
+            if (data.Delete === 1) {
+                message = "Done Delete"
+                await db.Ingredient.destroy({
+                    where: {},
+                    truncate: true
+                })
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -247,4 +320,6 @@ module.exports = {
     updateUserData,
     deleteUserData,
     handleUserLogin,
+    createNewIngredient,
+    deleteAllIngredient,
 }

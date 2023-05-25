@@ -23,6 +23,10 @@ let initWebRoutes = (app) => {
     router.post('/api/admin/delete-user', adminController.handleDeleteUser);
     router.post("/api/admin/login", adminController.handleLogin)
 
+    //// Admin Ingredient
+    router.post("/api/admin/create-new-ingredient", adminController.handleCreateNewIngredient)
+    router.post("/api/admin/delete-all-ingredient", adminController.handleDeleteAllIngredient)
+
     return app.use("/", router)
 };
 
