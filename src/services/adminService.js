@@ -62,6 +62,7 @@ let createNewIngredient = (data) => {
         }
     });
 };
+
 let deleteAllIngredient = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
