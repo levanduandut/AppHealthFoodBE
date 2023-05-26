@@ -1,5 +1,12 @@
 import adminService from "../services/adminService";
 
+let handleEditIngredient = async (req, res) => {
+    
+    let data = req.body;
+    console.log(data)
+    let message = await adminService.updateIngredientData(data);
+    return res.status(200).json(message);
+}
 let handleCreateNewIngredient = async (req, res) => {
     let message = await adminService.createNewIngredient(req.body);
     console.log(message);
@@ -39,6 +46,7 @@ let handleGetAllUsers = async (req, res) => {
     });
 };
 let handleEditUser = async (req, res) => {
+
     let data = req.body;
     let message = await adminService.updateUserData(data);
     return res.status(200).json(message);
@@ -79,4 +87,6 @@ module.exports = {
     handleCreateNewIngredient,
     handleDeleteAllIngredient,
     handleDeleteOneIngredient,
+    handleEditIngredient,
+    
 }

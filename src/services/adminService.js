@@ -64,6 +64,59 @@ let deleteAllIngredient = (data) => {
     });
 }
 
+let updateIngredientData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong co id Ingredient",
+                    data,
+                });
+            } else {
+                let ingredient = await db.Ingredient.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                });
+                if (ingredient) {
+                    // ingredient.name= data.name,
+                    ingredient.category= data.category,
+                    ingredient.unit= data.unit,
+                    ingredient.calo= Number(data.calo),
+                    ingredient.protein= Number(data.protein),
+                    ingredient.fat= Number(data.fat),
+                    ingredient.carb= Number(data.carb),
+                    ingredient.fiber= Number(data.fiber),
+                    ingredient.cholesterol= Number(data.cholesterol),
+                    ingredient.canxi= Number(data.canxi),
+                    ingredient.photpho= Number(data.photpho),
+                    ingredient.fe= Number(data.fe),
+                    ingredient.natri= Number(data.natri),
+                    ingredient.kali= Number(data.kali),
+                    ingredient.betacaroten= Number(data.betacaroten),
+                    ingredient.vita= Number(data.vita),
+                    ingredient.vitb1= Number(data.vitb1),
+                    ingredient.vitc= Number(data.vitc),
+
+                    await ingredient.save();
+                    resolve({
+                        errCode: 0,
+                        message: "Da sua",
+                    });
+                } else {
+                    resolve({
+                        errCode: 2,
+                        message: "Khong sua dc ",
+                    });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -334,4 +387,5 @@ module.exports = {
     createNewIngredient,
     deleteAllIngredient,
     deleteOneIngredient,
+    updateIngredientData,
 }
