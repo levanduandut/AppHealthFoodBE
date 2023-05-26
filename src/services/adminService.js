@@ -236,6 +236,32 @@ let updateUserData = (data) => {
         }
     });
 };
+
+let deleteOneIngredient = (idIngre) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let ingre = await db.Ingredient.findOne({ where: { id: idIngre } });
+            if (!ingre) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong ton tai",
+                    idIngre,
+                });
+            }
+            await db.Ingredient.destroy({
+                where: { id: idIngre },
+            });
+            resolve({
+                errCode: 0,
+                message: "Delete OK",
+                idIngre,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let deleteUserData = (idUser) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -307,4 +333,5 @@ module.exports = {
     handleUserLogin,
     createNewIngredient,
     deleteAllIngredient,
+    deleteOneIngredient,
 }

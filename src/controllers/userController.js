@@ -31,7 +31,6 @@ let handleInfo = async (req, res) => {
 let handleGetIngredient = async (req, res) => {
     let id = req.query.id; // All, id
     let ingre = await userService.getAllIngredient(id);
-    console.log(ingre.length);
     return res.status(200).json({
         errCode: 0,
         errMessage: "OK",

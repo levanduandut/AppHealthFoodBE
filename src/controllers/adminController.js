@@ -1,6 +1,5 @@
 import adminService from "../services/adminService";
 
-
 let handleCreateNewIngredient = async (req, res) => {
     let message = await adminService.createNewIngredient(req.body);
     console.log(message);
@@ -11,6 +10,18 @@ let handleDeleteAllIngredient = async (req, res) => {
     let message = await adminService.deleteAllIngredient(req.body);
     console.log(message);
     return res.status(200).json(message);
+}
+
+let handleDeleteOneIngredient = async (req, res) => {
+    let idIngre = req.body.id;
+    if (idIngre) {
+        let mes = await adminService.deleteOneIngredient(idIngre);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
 }
 
 let handleCreateNewUser = async (req, res) => {
@@ -67,4 +78,5 @@ module.exports = {
     handleLogin,
     handleCreateNewIngredient,
     handleDeleteAllIngredient,
+    handleDeleteOneIngredient,
 }

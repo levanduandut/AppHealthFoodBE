@@ -22,7 +22,6 @@ let getAllIngredient = (IngreId) => {
                     },
                 });
             }
-            console.log(ingre.length);
             resolve(ingre);
         } catch (error) {
             reject(error);

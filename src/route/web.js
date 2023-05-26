@@ -28,6 +28,7 @@ let initWebRoutes = (app) => {
     //// Admin Ingredient
     router.post("/api/admin/create-new-ingredient", adminController.handleCreateNewIngredient)
     router.post("/api/admin/delete-all-ingredient", adminController.handleDeleteAllIngredient)
+    router.post("/api/admin/delete-ingredient", adminController.handleDeleteOneIngredient)
 
     return app.use("/", router)
 };
