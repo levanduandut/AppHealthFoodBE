@@ -14,6 +14,7 @@ let initWebRoutes = (app) => {
     //User Router
     router.post("/api/user/login", userController.handleLogin)
     router.post("/api/user/getInfo", userController.handleInfo)
+    router.get("/api/user/get-all-ingredient", userController.handleGetIngredient)
 
     //Admin Router
     // router.post("/api/admin/login",userController.handleLogin)
@@ -23,6 +24,7 @@ let initWebRoutes = (app) => {
     router.post('/api/admin/delete-user', adminController.handleDeleteUser);
     router.post("/api/admin/login", adminController.handleLogin)
 
+    //Public
     //// Admin Ingredient
     router.post("/api/admin/create-new-ingredient", adminController.handleCreateNewIngredient)
     router.post("/api/admin/delete-all-ingredient", adminController.handleDeleteAllIngredient)
