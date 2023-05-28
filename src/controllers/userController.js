@@ -1,4 +1,27 @@
 import userService from "../services/userService";
+const { Translate } = require('@google-cloud/translate').v2;
+require('dotenv').config();
+
+// Instantiates a client
+const XTRAN = JSON.parse(process.env.CODETRANSLATE)
+const translate = new Translate({
+    credentials: XTRAN,
+    projectId: XTRAN.project_id
+});
+let handleTransale = async (req, res) => {
+    try {
+        let data = await translate.translate(req.body.text, 'en');
+        return res.status(500).json({
+            errCode: 0,
+            data: data[0],
+        })
+    } catch (error) {
+        return res.status(200).json({
+            errCode: 1,
+        });
+    }
+}
+
 let handleLogin = async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
@@ -40,5 +63,6 @@ let handleGetIngredient = async (req, res) => {
 module.exports = {
     handleLogin,
     handleInfo,
-    handleGetIngredient
+    handleGetIngredient,
+    handleTransale
 }
