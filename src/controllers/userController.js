@@ -10,7 +10,7 @@ const translate = new Translate({
 });
 let handleTransale = async (req, res) => {
     try {
-        let data = await translate.translate(req.body.text, 'en');
+        let data = await translate.translate(req.body.text, req.body.lang);
         return res.status(500).json({
             errCode: 0,
             data: data[0],
