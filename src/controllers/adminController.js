@@ -11,9 +11,9 @@ let handleDeleteAllBlog = async (req, res) => {
     return res.status(200).json(message);
 }
 let handleDeleteOneBlog = async (req, res) => {
-    let idIngre = req.body.id;
-    if (idIngre) {
-        let mes = await adminService.deleteOneIngredient(idIngre);
+    let idBlog = req.body.id;
+    if (idBlog) {
+        let mes = await adminService.deleteOneBlog(idBlog);
         return res.status(200).json(mes);
     } else {
         return res.status(200).json({

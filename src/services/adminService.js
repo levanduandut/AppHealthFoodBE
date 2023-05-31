@@ -5,6 +5,31 @@ import { raw } from "body-parser";
 import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+
+let deleteOneBlog = (idBlog) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let blog = await db.Blog.findOne({ where: { id: idBlog } });
+            if (!blog) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong ton tai",
+                    idBlog,
+                });
+            }
+            await db.Blog.destroy({
+                where: { id: idBlog },
+            });
+            resolve({
+                errCode: 0,
+                message: "Delete OK",
+                idBlog,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let createNewBlog = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -411,4 +436,5 @@ module.exports = {
     deleteOneIngredient,
     updateIngredientData,
     createNewBlog,
+    deleteOneBlog,
 }
