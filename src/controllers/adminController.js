@@ -1,7 +1,7 @@
 import adminService from "../services/adminService";
 
 let handleCreateNewBlog = async (req, res) => {
-    let message = await adminService.createNewIngredient(req.body);
+    let message = await adminService.createNewBlog(req.body);
     console.log(message);
     return res.status(200).json(message);
 }

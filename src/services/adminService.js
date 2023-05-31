@@ -5,6 +5,28 @@ import { raw } from "body-parser";
 import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+let createNewBlog = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            data.forEach(async (value, index) => {
+                await db.Blog.create({
+                    title: value.title,
+                    categoryId: value.categoryId,
+                    tag: value.tag,
+                    star: Number(value.star),
+                    detail: value.detail,
+                    // image: value.image,
+                });
+            })
+            resolve({
+                errCode: 0,
+                message: "Save Ok",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 let createNewIngredient = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -57,7 +79,7 @@ let deleteAllIngredient = (data) => {
                 errCode: 0,
                 message: "Delete All Ok",
             });
-            
+
         } catch (error) {
             reject(error);
         }
@@ -81,25 +103,25 @@ let updateIngredientData = (data) => {
                 });
                 if (ingredient) {
                     // ingredient.name= data.name,
-                    ingredient.category= data.category,
-                    ingredient.unit= data.unit,
-                    ingredient.calo= Number(data.calo),
-                    ingredient.protein= Number(data.protein),
-                    ingredient.fat= Number(data.fat),
-                    ingredient.carb= Number(data.carb),
-                    ingredient.fiber= Number(data.fiber),
-                    ingredient.cholesterol= Number(data.cholesterol),
-                    ingredient.canxi= Number(data.canxi),
-                    ingredient.photpho= Number(data.photpho),
-                    ingredient.fe= Number(data.fe),
-                    ingredient.natri= Number(data.natri),
-                    ingredient.kali= Number(data.kali),
-                    ingredient.betacaroten= Number(data.betacaroten),
-                    ingredient.vita= Number(data.vita),
-                    ingredient.vitb1= Number(data.vitb1),
-                    ingredient.vitc= Number(data.vitc),
+                    ingredient.category = data.category,
+                        ingredient.unit = data.unit,
+                        ingredient.calo = Number(data.calo),
+                        ingredient.protein = Number(data.protein),
+                        ingredient.fat = Number(data.fat),
+                        ingredient.carb = Number(data.carb),
+                        ingredient.fiber = Number(data.fiber),
+                        ingredient.cholesterol = Number(data.cholesterol),
+                        ingredient.canxi = Number(data.canxi),
+                        ingredient.photpho = Number(data.photpho),
+                        ingredient.fe = Number(data.fe),
+                        ingredient.natri = Number(data.natri),
+                        ingredient.kali = Number(data.kali),
+                        ingredient.betacaroten = Number(data.betacaroten),
+                        ingredient.vita = Number(data.vita),
+                        ingredient.vitb1 = Number(data.vitb1),
+                        ingredient.vitc = Number(data.vitc),
 
-                    await ingredient.save();
+                        await ingredient.save();
                     resolve({
                         errCode: 0,
                         message: "Da sua",
@@ -388,4 +410,5 @@ module.exports = {
     deleteAllIngredient,
     deleteOneIngredient,
     updateIngredientData,
+    createNewBlog,
 }
