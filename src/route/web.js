@@ -16,6 +16,7 @@ let initWebRoutes = (app) => {
     router.post("/api/user/translate", userController.handleTransale)
     router.post("/api/user/getInfo", userController.handleInfo)
     router.get("/api/user/get-all-ingredient", userController.handleGetIngredient)
+    router.get("/api/user/get-all-blog", userController.handleGetBlog)
 
     //Admin Router
     // router.post("/api/admin/login",userController.handleLogin)
@@ -31,6 +32,11 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-all-ingredient", adminController.handleDeleteAllIngredient)
     router.post("/api/admin/delete-ingredient", adminController.handleDeleteOneIngredient)
     router.put("/api/admin/edit-ingredient", adminController.handleEditIngredient)
+
+    router.post("/api/admin/create-new-blog", adminController.handleCreateNewBlog)
+    router.post("/api/admin/delete-all-blog", adminController.handleDeleteAllBlog)
+    router.post("/api/admin/delete-blog", adminController.handleDeleteOneBlog)
+    router.put("/api/admin/edit-blog", adminController.handleEditBlog)
     
 
     return app.use("/", router)

@@ -1,7 +1,35 @@
 import adminService from "../services/adminService";
 
+let handleCreateNewBlog = async (req, res) => {
+    let message = await adminService.createNewIngredient(req.body);
+    console.log(message);
+    return res.status(200).json(message);
+}
+let handleDeleteAllBlog = async (req, res) => {
+    let message = await adminService.deleteAllIngredient(req.body);
+    console.log(message);
+    return res.status(200).json(message);
+}
+let handleDeleteOneBlog = async (req, res) => {
+    let idIngre = req.body.id;
+    if (idIngre) {
+        let mes = await adminService.deleteOneIngredient(idIngre);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
+}
+let handleEditBlog = async (req, res) => {
+
+    let data = req.body;
+    console.log(data)
+    let message = await adminService.updateIngredientData(data);
+    return res.status(200).json(message);
+}
 let handleEditIngredient = async (req, res) => {
-    
+
     let data = req.body;
     console.log(data)
     let message = await adminService.updateIngredientData(data);
@@ -88,5 +116,9 @@ module.exports = {
     handleDeleteAllIngredient,
     handleDeleteOneIngredient,
     handleEditIngredient,
-    
+    handleCreateNewBlog,
+    handleDeleteAllBlog,
+    handleDeleteOneBlog,
+    handleEditBlog,
+
 }

@@ -60,9 +60,20 @@ let handleGetIngredient = async (req, res) => {
         ingre,
     });
 }
+let handleGetBlog = async (req, res) => {
+    let id = req.query.id; // All, id
+    let blog = await userService.getAllBlog(id);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        blog,
+    });
+}
+
 module.exports = {
     handleLogin,
     handleInfo,
     handleGetIngredient,
-    handleTransale
+    handleTransale,
+    handleGetBlog
 }

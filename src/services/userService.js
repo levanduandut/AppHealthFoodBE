@@ -5,6 +5,27 @@ import { raw } from "body-parser";
 import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+let getAllBlog = (blogId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let blog = "";
+            if (!blogId) {
+                blog = await db.Blog.findAll({
+                });
+            }
+            if (blogId && blogId !== "ALL") {
+                blog = await db.Blog.findOne({
+                    where: {
+                        id: blogId,
+                    },
+                });
+            }
+            resolve(blog);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let getAllIngredient = (IngreId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -150,4 +171,5 @@ module.exports = {
     handleUserLogin,
     handleUserInfo,
     getAllIngredient,
+    getAllBlog,
 }
