@@ -2,7 +2,16 @@ import express from "express";
 import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
 import initWebRoutes from "./route/web";
-import connectDB from "./config/connectDB"
+import connectDB from "./config/connectDB";
+
+// const { Storage } = require('@google-cloud/storage');
+// const path = require("path");
+// const gc = new Storage({
+//     keyFilename: path.join(__dirname, "./fiery-atlas-388115-cbec4b777bcb.json"),
+//     projectId:'fiery-atlas-388115',
+// })
+// gc.getBuckets().then(x => console.log(x));
+// const fileBuckket = gc.bucket('healthfood-do');
 
 // import cors from "cors"
 require("dotenv").config();
@@ -30,8 +39,8 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb' }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

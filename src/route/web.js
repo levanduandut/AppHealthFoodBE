@@ -2,7 +2,8 @@ import express from "express";
 import homeController from "../controllers/homeController";
 import userController from "../controllers/userController";
 import adminController from "../controllers/adminController";
-
+const multer = require('multer')
+const upload = multer({ dest: 'src/uploads/' })
 let router = express.Router();
 
 let initWebRoutes = (app) => {
@@ -33,11 +34,11 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-ingredient", adminController.handleDeleteOneIngredient)
     router.put("/api/admin/edit-ingredient", adminController.handleEditIngredient)
 
-    router.post("/api/admin/create-new-blog", adminController.handleCreateNewBlog)
+    router.post("/api/admin/create-new-blog", upload.single('image'), adminController.handleCreateNewBlog)
     router.post("/api/admin/delete-all-blog", adminController.handleDeleteAllBlog)
     router.post("/api/admin/delete-blog", adminController.handleDeleteOneBlog)
     router.put("/api/admin/edit-blog", adminController.handleEditBlog)
-    
+
 
     return app.use("/", router)
 };

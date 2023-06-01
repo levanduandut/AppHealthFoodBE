@@ -30,19 +30,18 @@ let deleteOneBlog = (idBlog) => {
         }
     });
 };
-let createNewBlog = (data) => {
+let createNewBlog = (data, urlImage) => {
     return new Promise(async (resolve, reject) => {
         try {
-            data.forEach(async (value, index) => {
-                await db.Blog.create({
-                    title: value.title,
-                    categoryId: value.categoryId,
-                    tag: value.tag,
-                    star: Number(value.star),
-                    detail: value.detail,
-                    // image: value.image,
-                });
-            })
+            await db.Blog.create({
+                title: data.title,
+                categoryId: data.categoryId,
+                tag: data.tag,
+                star: Number(data.star),
+                detail: data.detail,
+                image: urlImage,
+            });
+
             resolve({
                 errCode: 0,
                 message: "Save Ok",
