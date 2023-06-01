@@ -3,6 +3,7 @@ import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { raw } from "body-parser";
 import jwt from 'jsonwebtoken';
+const fs = require('fs')
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
@@ -10,6 +11,17 @@ let deleteOneBlog = (idBlog) => {
     return new Promise(async (resolve, reject) => {
         try {
             let blog = await db.Blog.findOne({ where: { id: idBlog } });
+            let path = './src/uploads/' + blog.image;
+            try {
+                fs.unlink(path, (err) => {
+                    if (err) {
+                        console.error(err)
+                        return
+                    }
+                })
+            } catch (err) {
+                console.error(err)
+            }
             if (!blog) {
                 resolve({
                     errCode: 1,
@@ -41,7 +53,6 @@ let createNewBlog = (data, urlImage) => {
                 detail: data.detail,
                 image: urlImage,
             });
-
             resolve({
                 errCode: 0,
                 message: "Save Ok",
