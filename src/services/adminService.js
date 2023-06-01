@@ -6,7 +6,21 @@ import jwt from 'jsonwebtoken';
 const fs = require('fs')
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+const Multer = require("multer");
 
+const { Storage } = require('@google-cloud/storage');
+const path = require("path");
+const multerx = Multer({
+    storage: Multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // No larger than 5mb, change as you need
+    },
+});
+const storage = new Storage({
+    keyFilename: path.join(__dirname, "../fiery-atlas-388115-cbec4b777bcb.json"),
+    projectId: 'fiery-atlas-388115',
+})
+const buckket = storage.bucket('healthfood-do');
 //Blog
 let deleteOneBlog = (idBlog) => {
     return new Promise(async (resolve, reject) => {
@@ -43,16 +57,29 @@ let deleteOneBlog = (idBlog) => {
         }
     });
 };
-let createNewBlog = (data, urlImage) => {
+let createNewBlog = (data, urlImage, req) => {
     return new Promise(async (resolve, reject) => {
         try {
+            try {
+                if (req.file) {
+                    console.log(req.file)
+                    const blob = buckket.file(req.file.originalname);
+                    const blobStream = blob.createWriteStream();
+                    await blobStream.on('finish', () => {
+                    })
+                    blobStream.end(req.file.buffer);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
             await db.Blog.create({
                 title: data.title,
                 categoryId: data.categoryId,
                 tag: data.tag,
                 star: Number(data.star),
                 detail: data.detail,
-                image: urlImage,
+                image: req.file.originalname,
             });
             resolve({
                 errCode: 0,
@@ -63,9 +90,21 @@ let createNewBlog = (data, urlImage) => {
         }
     });
 };
-let updateBlogData = (data) => {
+let updateBlogData = (data, urlImage, req) => {
     return new Promise(async (resolve, reject) => {
         try {
+            try {
+                if (req.file) {
+                    console.log(req.file)
+                    const blob = buckket.file(req.file.originalname);
+                    const blobStream = blob.createWriteStream();
+                    await blobStream.on('finish', () => {
+                    })
+                    blobStream.end(req.file.buffer);
+                }
+            } catch (error) {
+                console.log(error)
+            }
             if (!data.id) {
                 resolve({
                     errCode: 1,
@@ -79,11 +118,12 @@ let updateBlogData = (data) => {
                     },
                 });
                 if (blog) {
-                    blog.categoryId = Number(data.categoryId),
+                    blog.title = data.title,
+                        blog.categoryId = Number(data.categoryId),
                         blog.tag = data.tag,
                         blog.star = Number(data.star),
                         blog.detail = data.detail,
-                        // blog.image = urlImage,
+                        blog.image = req.file.originalname,
                         await blog.save();
                     resolve({
                         errCode: 0,

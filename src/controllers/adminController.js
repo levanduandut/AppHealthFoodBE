@@ -1,8 +1,8 @@
-import adminService from "../services/adminService";
+import adminService from "../services/adminService"
 
 //Blog
 let handleCreateNewBlog = async (req, res) => {
-    let message = await adminService.createNewBlog(req.body, req.file.filename);
+    let message = await adminService.createNewBlog(req.body, req.file.filename,req);
     console.log(message);
     return res.status(200).json(message);
 }
@@ -24,8 +24,7 @@ let handleDeleteOneBlog = async (req, res) => {
 }
 let handleEditBlog = async (req, res) => {
     let data = req.body;
-    console.log(data)
-    let message = await adminService.updateBlogData(data);
+    let message = await adminService.updateBlogData(data, req.file.filename,req);
     return res.status(200).json(message);
 }
 
@@ -42,13 +41,11 @@ let handleCreateNewIngredient = async (req, res) => {
     console.log(message);
     return res.status(200).json(message);
 }
-
 let handleDeleteAllIngredient = async (req, res) => {
     let message = await adminService.deleteAllIngredient(req.body);
     console.log(message);
     return res.status(200).json(message);
 }
-
 let handleDeleteOneIngredient = async (req, res) => {
     let idIngre = req.body.id;
     if (idIngre) {
@@ -61,6 +58,7 @@ let handleDeleteOneIngredient = async (req, res) => {
     }
 }
 
+//User
 let handleCreateNewUser = async (req, res) => {
     let message = await adminService.createNewUser(req.body);
     console.log(message);

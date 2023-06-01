@@ -2,8 +2,13 @@ import express from "express";
 import homeController from "../controllers/homeController";
 import userController from "../controllers/userController";
 import adminController from "../controllers/adminController";
-const multer = require('multer')
-const upload = multer({ dest: 'src/uploads/' })
+const Multer = require('multer')
+const multer = Multer({
+    storage: Multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // No larger than 5mb, change as you need
+    },
+});
 let router = express.Router();
 
 let initWebRoutes = (app) => {
@@ -34,10 +39,10 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-ingredient", adminController.handleDeleteOneIngredient)
     router.put("/api/admin/edit-ingredient", adminController.handleEditIngredient)
 
-    router.post("/api/admin/create-new-blog", upload.single('image'), adminController.handleCreateNewBlog)
+    router.post("/api/admin/create-new-blog", multer.single('image'), adminController.handleCreateNewBlog)
     router.post("/api/admin/delete-all-blog", adminController.handleDeleteAllBlog)
     router.post("/api/admin/delete-blog", adminController.handleDeleteOneBlog)
-    router.put("/api/admin/edit-blog", adminController.handleEditBlog)
+    router.put("/api/admin/edit-blog", multer.single('image'), adminController.handleEditBlog)
 
 
     return app.use("/", router)
