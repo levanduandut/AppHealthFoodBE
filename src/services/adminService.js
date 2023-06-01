@@ -7,6 +7,7 @@ const fs = require('fs')
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+//Blog
 let deleteOneBlog = (idBlog) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -62,7 +63,66 @@ let createNewBlog = (data, urlImage) => {
         }
     });
 };
+let updateBlogData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong co id Blog",
+                    data,
+                });
+            } else {
+                let blog = await db.Blog.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                });
+                if (blog) {
+                    blog.categoryId = Number(data.categoryId),
+                        blog.tag = data.tag,
+                        blog.star = Number(data.star),
+                        blog.detail = data.detail,
+                        // blog.image = urlImage,
+                        await blog.save();
+                    resolve({
+                        errCode: 0,
+                        message: "Da sua",
+                    });
+                } else {
+                    resolve({
+                        errCode: 2,
+                        message: "Khong sua dc ",
+                    });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let deleteAllBlog = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let message = "";
+            if (data.Delete === 1) {
+                message = "Done Delete"
+                await db.Blog.destroy({
+                    where: {},
+                    truncate: true
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "Delete All Ok",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
+//Ingredient
 let createNewIngredient = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -98,7 +158,6 @@ let createNewIngredient = (data) => {
         }
     });
 };
-
 let deleteAllIngredient = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -120,7 +179,6 @@ let deleteAllIngredient = (data) => {
         }
     });
 }
-
 let updateIngredientData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -173,7 +231,32 @@ let updateIngredientData = (data) => {
         }
     });
 };
+let deleteOneIngredient = (idIngre) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let ingre = await db.Ingredient.findOne({ where: { id: idIngre } });
+            if (!ingre) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong ton tai",
+                    idIngre,
+                });
+            }
+            await db.Ingredient.destroy({
+                where: { id: idIngre },
+            });
+            resolve({
+                errCode: 0,
+                message: "Delete OK",
+                idIngre,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
+//User & Login
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -238,7 +321,6 @@ let handleUserLogin = (email, password) => {
         }
     });
 }
-
 let createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -346,32 +428,6 @@ let updateUserData = (data) => {
         }
     });
 };
-
-let deleteOneIngredient = (idIngre) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let ingre = await db.Ingredient.findOne({ where: { id: idIngre } });
-            if (!ingre) {
-                resolve({
-                    errCode: 1,
-                    message: "Khong ton tai",
-                    idIngre,
-                });
-            }
-            await db.Ingredient.destroy({
-                where: { id: idIngre },
-            });
-            resolve({
-                errCode: 0,
-                message: "Delete OK",
-                idIngre,
-            });
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
-
 let deleteUserData = (idUser) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -447,4 +503,6 @@ module.exports = {
     updateIngredientData,
     createNewBlog,
     deleteOneBlog,
+    deleteAllBlog,
+    updateBlogData,
 }

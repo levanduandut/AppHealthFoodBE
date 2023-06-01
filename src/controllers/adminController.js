@@ -1,12 +1,13 @@
 import adminService from "../services/adminService";
 
+//Blog
 let handleCreateNewBlog = async (req, res) => {
     let message = await adminService.createNewBlog(req.body, req.file.filename);
     console.log(message);
     return res.status(200).json(message);
 }
 let handleDeleteAllBlog = async (req, res) => {
-    let message = await adminService.deleteAllIngredient(req.body);
+    let message = await adminService.deleteAllBlog(req.body);
     console.log(message);
     return res.status(200).json(message);
 }
@@ -22,12 +23,13 @@ let handleDeleteOneBlog = async (req, res) => {
     }
 }
 let handleEditBlog = async (req, res) => {
-
     let data = req.body;
     console.log(data)
-    let message = await adminService.updateIngredientData(data);
+    let message = await adminService.updateBlogData(data);
     return res.status(200).json(message);
 }
+
+//Ingredient
 let handleEditIngredient = async (req, res) => {
 
     let data = req.body;

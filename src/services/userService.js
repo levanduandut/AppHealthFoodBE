@@ -49,7 +49,6 @@ let getAllIngredient = (IngreId) => {
         }
     });
 };
-
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -149,7 +148,6 @@ let verifyToken = (token) => {
     }
     return data;
 }
-
 let handleUserInfo = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -166,7 +164,6 @@ let handleUserInfo = (token) => {
         }
     });
 }
-
 module.exports = {
     handleUserLogin,
     handleUserInfo,
