@@ -3,12 +3,15 @@ import adminService from "../services/adminService"
 //Blog
 let handleCreateNewBlog = async (req, res) => {
     let message = await adminService.createNewBlog(req.body, req.file.filename,req);
-    console.log(message);
+    return res.status(200).json(message);
+}
+
+let handleCreateExcelBlog = async (req, res) => {
+    let message = await adminService.createExcelBlog(req.body);
     return res.status(200).json(message);
 }
 let handleDeleteAllBlog = async (req, res) => {
     let message = await adminService.deleteAllBlog(req.body);
-    console.log(message);
     return res.status(200).json(message);
 }
 let handleDeleteOneBlog = async (req, res) => {
@@ -38,12 +41,10 @@ let handleEditIngredient = async (req, res) => {
 }
 let handleCreateNewIngredient = async (req, res) => {
     let message = await adminService.createNewIngredient(req.body);
-    console.log(message);
     return res.status(200).json(message);
 }
 let handleDeleteAllIngredient = async (req, res) => {
     let message = await adminService.deleteAllIngredient(req.body);
-    console.log(message);
     return res.status(200).json(message);
 }
 let handleDeleteOneIngredient = async (req, res) => {
@@ -61,7 +62,6 @@ let handleDeleteOneIngredient = async (req, res) => {
 //User
 let handleCreateNewUser = async (req, res) => {
     let message = await adminService.createNewUser(req.body);
-    console.log(message);
     return res.status(200).json(message);
 }
 let handleGetAllUsers = async (req, res) => {
@@ -120,5 +120,5 @@ module.exports = {
     handleDeleteAllBlog,
     handleDeleteOneBlog,
     handleEditBlog,
-
+    handleCreateExcelBlog
 }

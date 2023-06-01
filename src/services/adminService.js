@@ -26,17 +26,6 @@ let deleteOneBlog = (idBlog) => {
     return new Promise(async (resolve, reject) => {
         try {
             let blog = await db.Blog.findOne({ where: { id: idBlog } });
-            let path = './src/uploads/' + blog.image;
-            try {
-                fs.unlink(path, (err) => {
-                    if (err) {
-                        console.error(err)
-                        return
-                    }
-                })
-            } catch (err) {
-                console.error(err)
-            }
             if (!blog) {
                 resolve({
                     errCode: 1,
@@ -51,6 +40,27 @@ let deleteOneBlog = (idBlog) => {
                 errCode: 0,
                 message: "Delete OK",
                 idBlog,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let createExcelBlog = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            data.forEach(async (value, index) => {
+                await db.Blog.create({
+                    title: value.title,
+                    categoryId: Number(value.categoryId),
+                    tag: value.tag,
+                    star: Number(value.star),
+                    detail: value.detail,
+                });
+            })
+            resolve({
+                errCode: 0,
+                message: "Save Ok",
             });
         } catch (error) {
             reject(error);
@@ -166,7 +176,6 @@ let deleteAllBlog = (data) => {
 let createNewIngredient = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(data)
             data.forEach(async (value, index) => {
                 await db.Ingredient.create({
                     name: value.name,
@@ -545,4 +554,5 @@ module.exports = {
     deleteOneBlog,
     deleteAllBlog,
     updateBlogData,
+    createExcelBlog,
 }

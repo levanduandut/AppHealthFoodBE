@@ -40,6 +40,7 @@ let initWebRoutes = (app) => {
     router.put("/api/admin/edit-ingredient", adminController.handleEditIngredient)
 
     router.post("/api/admin/create-new-blog", multer.single('image'), adminController.handleCreateNewBlog)
+    router.post("/api/admin/create-excel-blog", adminController.handleCreateExcelBlog)
     router.post("/api/admin/delete-all-blog", adminController.handleDeleteAllBlog)
     router.post("/api/admin/delete-blog", adminController.handleDeleteOneBlog)
     router.put("/api/admin/edit-blog", multer.single('image'), adminController.handleEditBlog)
