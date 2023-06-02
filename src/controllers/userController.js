@@ -61,8 +61,9 @@ let handleGetIngredient = async (req, res) => {
     });
 }
 let handleGetBlog = async (req, res) => {
-    let id = req.query.id; // All, id
-    let blog = await userService.getAllBlog(id);
+    let categoryId = req.body.categoryId;
+     // All, id
+    let blog = await userService.getAllBlog(categoryId);
     return res.status(200).json({
         errCode: 0,
         errMessage: "OK",

@@ -72,7 +72,6 @@ let createNewBlog = (data, urlImage, req) => {
         try {
             try {
                 if (req.file) {
-                    console.log(req.file)
                     const blob = buckket.file(req.file.originalname);
                     const blobStream = blob.createWriteStream();
                     await blobStream.on('finish', () => {
