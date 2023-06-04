@@ -19,6 +19,7 @@ let initWebRoutes = (app) => {
 
     //User Router
     router.post("/api/user/login", userController.handleLogin)
+    router.post("/api/user/register", userController.handleRegister)
     router.post("/api/user/translate", userController.handleTransale)
     router.post("/api/user/getInfo", userController.handleInfo)
     router.get("/api/user/get-all-ingredient", userController.handleGetIngredient)

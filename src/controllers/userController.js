@@ -38,6 +38,11 @@ let handleLogin = async (req, res) => {
         token: userData.jwtToken,
     })
 }
+let handleRegister = async (req, res) => {
+    let mes = await userService.createNewUser(req.body);
+    console.log(mes);
+    return res.status(200).json(mes);
+}
 let handleInfo = async (req, res) => {
     let token = req.body.jwtToken;
     if (!token) {
@@ -62,7 +67,7 @@ let handleGetIngredient = async (req, res) => {
 }
 let handleGetBlog = async (req, res) => {
     let categoryId = req.body.categoryId;
-     // All, id
+    // All, id
     let blog = await userService.getAllBlog(categoryId);
     return res.status(200).json({
         errCode: 0,
@@ -76,5 +81,6 @@ module.exports = {
     handleInfo,
     handleGetIngredient,
     handleTransale,
-    handleGetBlog
+    handleGetBlog,
+    handleRegister
 }
