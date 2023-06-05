@@ -1,11 +1,17 @@
 import adminService from "../services/adminService"
 
+//Sick
+let handleCreateNewSick = async (req, res) => {
+    let message = await adminService.createNewSick(req.body, req.file.filename,req);
+    return res.status(200).json(message);
+}
+
+
 //Blog
 let handleCreateNewBlog = async (req, res) => {
     let message = await adminService.createNewBlog(req.body, req.file.filename,req);
     return res.status(200).json(message);
 }
-
 let handleCreateExcelBlog = async (req, res) => {
     let message = await adminService.createExcelBlog(req.body);
     return res.status(200).json(message);
@@ -120,5 +126,6 @@ module.exports = {
     handleDeleteAllBlog,
     handleDeleteOneBlog,
     handleEditBlog,
-    handleCreateExcelBlog
+    handleCreateExcelBlog,
+    handleCreateNewSick
 }

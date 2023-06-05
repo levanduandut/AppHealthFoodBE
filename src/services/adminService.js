@@ -21,6 +21,38 @@ const storage = new Storage({
     projectId: 'fiery-atlas-388115',
 })
 const buckket = storage.bucket('healthfood-do');
+
+//Sick
+let createNewSick = (data, urlImage, req) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            try {
+                if (req.file) {
+                    const blob = buckket.file(req.file.originalname);
+                    const blobStream = blob.createWriteStream();
+                    await blobStream.on('finish', () => {
+                    })
+                    blobStream.end(req.file.buffer);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+            await db.Blog.create({
+                name: data.name,
+                tag: data.tag,
+                detail: data.detail,
+                image: req.file.originalname,
+            });
+            resolve({
+                errCode: 0,
+                message: "Save Ok",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 //Blog
 let deleteOneBlog = (idBlog) => {
     return new Promise(async (resolve, reject) => {
@@ -554,4 +586,5 @@ module.exports = {
     deleteAllBlog,
     updateBlogData,
     createExcelBlog,
+    createNewSick,
 }
