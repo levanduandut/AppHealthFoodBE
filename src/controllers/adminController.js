@@ -9,7 +9,6 @@ let handleCreateExcelSick = async (req, res) => {
     let message = await adminService.createExcelSick(req.body);
     return res.status(200).json(message);
 }
-
 let handleDeleteOneSick = async (req, res) => {
     let idSick = req.body.id;
     if (idSick) {
@@ -20,6 +19,12 @@ let handleDeleteOneSick = async (req, res) => {
             mes: "Fall",
         });
     }
+}
+let handleEditSick = async (req, res) => {
+    let data = req.body;
+    let message = await adminService.updateSickData(data, req);
+
+    return res.status(200).json(message);
 }
 
 //Blog
@@ -144,5 +149,6 @@ module.exports = {
     handleCreateExcelBlog,
     handleCreateNewSick,
     handleCreateExcelSick,
-    handleDeleteOneSick
+    handleDeleteOneSick,
+    handleEditSick
 }

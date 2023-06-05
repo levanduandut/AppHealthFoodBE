@@ -45,7 +45,7 @@ let createNewSick = (data, urlImage, req) => {
             });
             resolve({
                 errCode: 0,
-                message: "Save Ok",
+                message: "Lưu thành công !",
             });
         } catch (error) {
             reject(error);
@@ -64,7 +64,7 @@ let createExcelSick = (data) => {
             })
             resolve({
                 errCode: 0,
-                message: "Save Ok",
+                message: "Lưu thành công !",
             });
         } catch (error) {
             reject(error);
@@ -78,7 +78,7 @@ let deleteOneSick = (idSick) => {
             if (!sick) {
                 resolve({
                     errCode: 1,
-                    message: "Khong ton tai",
+                    message: "Không tồn tại !",
                     idSick,
                 });
             }
@@ -87,9 +87,91 @@ let deleteOneSick = (idSick) => {
             });
             resolve({
                 errCode: 0,
-                message: "Delete OK",
+                message: "Xóa thành công !",
                 idSick,
             });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let updateSickData = (data, req) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (req.file) {
+                try {
+                    if (req.file) {
+                        console.log(req.file)
+                        const blob = buckket.file(req.file.originalname);
+                        const blobStream = blob.createWriteStream();
+                        await blobStream.on('finish', () => {
+                        })
+                        blobStream.end(req.file.buffer);
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id bệnh",
+                        data,
+                    });
+                } else {
+                    let sick = await db.Sick.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (sick) {
+                        sick.name = data.name,
+                            sick.tag = data.tag,
+                            sick.detail = data.detail,
+                            sick.image = req.file.originalname,
+                            await sick.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+            else {
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id bệnh",
+                        data,
+                    });
+                } else {
+                    let sick = await db.Sick.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (sick) {
+                        sick.name = data.name,
+                            sick.tag = data.tag,
+                            sick.detail = data.detail,
+                            await sick.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+
         } catch (error) {
             reject(error);
         }
@@ -104,7 +186,7 @@ let deleteOneBlog = (idBlog) => {
             if (!blog) {
                 resolve({
                     errCode: 1,
-                    message: "Khong ton tai",
+                    message: "Không tồn tại !",
                     idBlog,
                 });
             }
@@ -113,7 +195,7 @@ let deleteOneBlog = (idBlog) => {
             });
             resolve({
                 errCode: 0,
-                message: "Delete OK",
+                message: "Xóa thành công !",
                 idBlog,
             });
         } catch (error) {
@@ -135,7 +217,7 @@ let createExcelBlog = (data) => {
             })
             resolve({
                 errCode: 0,
-                message: "Save Ok",
+                message: "Lưu thành công !",
             });
         } catch (error) {
             reject(error);
@@ -167,7 +249,7 @@ let createNewBlog = (data, urlImage, req) => {
             });
             resolve({
                 errCode: 0,
-                message: "Save Ok",
+                message: "Lưu thành công !",
             });
         } catch (error) {
             reject(error);
@@ -177,49 +259,84 @@ let createNewBlog = (data, urlImage, req) => {
 let updateBlogData = (data, urlImage, req) => {
     return new Promise(async (resolve, reject) => {
         try {
-            try {
-                if (req.file) {
-                    console.log(req.file)
-                    const blob = buckket.file(req.file.originalname);
-                    const blobStream = blob.createWriteStream();
-                    await blobStream.on('finish', () => {
-                    })
-                    blobStream.end(req.file.buffer);
+            if (req.file) {
+                try {
+                    if (req.file) {
+                        console.log(req.file)
+                        const blob = buckket.file(req.file.originalname);
+                        const blobStream = blob.createWriteStream();
+                        await blobStream.on('finish', () => {
+                        })
+                        blobStream.end(req.file.buffer);
+                    }
+                } catch (error) {
+                    console.log(error)
                 }
-            } catch (error) {
-                console.log(error)
-            }
-            if (!data.id) {
-                resolve({
-                    errCode: 1,
-                    message: "Khong co id Blog",
-                    data,
-                });
-            } else {
-                let blog = await db.Blog.findOne({
-                    where: {
-                        id: data.id,
-                    },
-                });
-                if (blog) {
-                    blog.title = data.title,
-                        blog.categoryId = Number(data.categoryId),
-                        blog.tag = data.tag,
-                        blog.star = Number(data.star),
-                        blog.detail = data.detail,
-                        blog.image = req.file.originalname,
-                        await blog.save();
+                if (!data.id) {
                     resolve({
-                        errCode: 0,
-                        message: "Da sua",
+                        errCode: 1,
+                        message: "Không có id Blog",
+                        data,
                     });
                 } else {
-                    resolve({
-                        errCode: 2,
-                        message: "Khong sua dc ",
+                    let blog = await db.Blog.findOne({
+                        where: {
+                            id: data.id,
+                        },
                     });
+                    if (blog) {
+                        blog.title = data.title,
+                            blog.categoryId = Number(data.categoryId),
+                            blog.tag = data.tag,
+                            blog.star = Number(data.star),
+                            blog.detail = data.detail,
+                            blog.image = req.file.originalname,
+                            await blog.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
                 }
             }
+            else {
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id Blog",
+                        data,
+                    });
+                } else {
+                    let blog = await db.Blog.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (blog) {
+                        blog.title = data.title,
+                            blog.categoryId = Number(data.categoryId),
+                            blog.tag = data.tag,
+                            blog.star = Number(data.star),
+                            blog.detail = data.detail,
+                            await blog.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa ",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+
         } catch (error) {
             reject(error);
         }
@@ -230,7 +347,6 @@ let deleteAllBlog = (data) => {
         try {
             let message = "";
             if (data.Delete === 1) {
-                message = "Done Delete"
                 await db.Blog.destroy({
                     where: {},
                     truncate: true
@@ -238,7 +354,7 @@ let deleteAllBlog = (data) => {
             }
             resolve({
                 errCode: 0,
-                message: "Delete All Ok",
+                message: "Xóa tât cả thành công",
             });
         } catch (error) {
             reject(error);
@@ -274,7 +390,7 @@ let createNewIngredient = (data) => {
             })
             resolve({
                 errCode: 0,
-                message: "Save Ok",
+                message: "Lưu thành công !",
             });
         } catch (error) {
             reject(error);
@@ -286,7 +402,7 @@ let deleteAllIngredient = (data) => {
         try {
             let message = "";
             if (data.Delete === 1) {
-                message = "Done Delete"
+                message = "Xóa thành công"
                 await db.Ingredient.destroy({
                     where: {},
                     truncate: true
@@ -294,7 +410,7 @@ let deleteAllIngredient = (data) => {
             }
             resolve({
                 errCode: 0,
-                message: "Delete All Ok",
+                message: "Xóa thành công",
             });
 
         } catch (error) {
@@ -308,7 +424,7 @@ let updateIngredientData = (data) => {
             if (!data.id) {
                 resolve({
                     errCode: 1,
-                    message: "Khong co id Ingredient",
+                    message: "Không có id Ingredient",
                     data,
                 });
             } else {
@@ -361,7 +477,7 @@ let deleteOneIngredient = (idIngre) => {
             if (!ingre) {
                 resolve({
                     errCode: 1,
-                    message: "Khong ton tai",
+                    message: "Không tồn tại !",
                     idIngre,
                 });
             }
@@ -370,7 +486,7 @@ let deleteOneIngredient = (idIngre) => {
             });
             resolve({
                 errCode: 0,
-                message: "Delete OK",
+                message: "Xóa thành công !",
                 idIngre,
             });
         } catch (error) {
@@ -518,7 +634,7 @@ let updateUserData = (data) => {
             if (!data.id) {
                 resolve({
                     errCode: 1,
-                    message: "Khong co id",
+                    message: "Không có id User",
                     data,
                 });
             } else {
@@ -536,13 +652,13 @@ let updateUserData = (data) => {
                     await user.save();
                     resolve({
                         errCode: 0,
-                        message: "da sua",
+                        message: "Đã sửa",
                         data,
                     });
                 } else {
                     resolve({
                         errCode: 2,
-                        message: "Khong sua dc ",
+                        message: "Không sửa được",
                     });
                 }
             }
@@ -558,7 +674,7 @@ let deleteUserData = (idUser) => {
             if (!user) {
                 resolve({
                     errCode: 1,
-                    message: "Khong ton tai",
+                    message: "Không tồn tại !",
                     idUser,
                 });
             }
@@ -567,7 +683,7 @@ let deleteUserData = (idUser) => {
             });
             resolve({
                 errCode: 0,
-                message: "Delete OK",
+                message: "Xóa thành công !",
                 idUser,
             });
         } catch (error) {
@@ -631,5 +747,6 @@ module.exports = {
     createExcelBlog,
     createNewSick,
     createExcelSick,
-    deleteOneSick
+    deleteOneSick,
+    updateSickData
 }

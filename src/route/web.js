@@ -50,7 +50,7 @@ let initWebRoutes = (app) => {
     //// Admin Sick
     router.post("/api/admin/create-new-sick", multer.single('image'), adminController.handleCreateNewSick)
     router.post("/api/admin/create-excel-sick", adminController.handleCreateExcelSick)
-    // router.put("/api/admin/edit-sick", multer.single('image'), adminController.handleEditBlog)
+    router.put("/api/admin/edit-sick", multer.single('image'), adminController.handleEditSick)
     router.post("/api/admin/delete-sick", adminController.handleDeleteOneSick)
 
     return app.use("/", router)
