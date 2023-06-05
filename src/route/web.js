@@ -39,13 +39,15 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-all-ingredient", adminController.handleDeleteAllIngredient)
     router.post("/api/admin/delete-ingredient", adminController.handleDeleteOneIngredient)
     router.put("/api/admin/edit-ingredient", adminController.handleEditIngredient)
-
+    //// Admin Blog
     router.post("/api/admin/create-new-blog", multer.single('image'), adminController.handleCreateNewBlog)
     router.post("/api/admin/create-excel-blog", adminController.handleCreateExcelBlog)
     router.post("/api/admin/delete-all-blog", adminController.handleDeleteAllBlog)
     router.post("/api/admin/delete-blog", adminController.handleDeleteOneBlog)
     router.put("/api/admin/edit-blog", multer.single('image'), adminController.handleEditBlog)
 
+    //// Admin Sick
+    router.post("/api/admin/create-new-blog", multer.single('image'), adminController.handleCreateNewSick)
 
     return app.use("/", router)
 };

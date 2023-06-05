@@ -458,7 +458,6 @@ let updateUserData = (data) => {
                     user.roleId = data.roleId;
                     user.age = data.age;
                     user.address = data.address;
-
                     await user.save();
                     resolve({
                         errCode: 0,
