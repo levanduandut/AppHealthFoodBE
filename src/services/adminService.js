@@ -52,6 +52,25 @@ let createNewSick = (data, urlImage, req) => {
         }
     });
 };
+let createExcelSick = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            data.forEach(async (value, index) => {
+                await db.Sick.create({
+                    name: data.name,
+                    tag: data.tag,
+                    detail: data.detail,
+                });
+            })
+            resolve({
+                errCode: 0,
+                message: "Save Ok",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 //Blog
 let deleteOneBlog = (idBlog) => {
@@ -587,4 +606,5 @@ module.exports = {
     updateBlogData,
     createExcelBlog,
     createNewSick,
+    createExcelSick
 }

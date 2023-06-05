@@ -5,7 +5,10 @@ let handleCreateNewSick = async (req, res) => {
     let message = await adminService.createNewSick(req.body, req.file.filename,req);
     return res.status(200).json(message);
 }
-
+let handleCreateExcelSick = async (req, res) => {
+    let message = await adminService.createExcelSick(req.body);
+    return res.status(200).json(message);
+}
 
 //Blog
 let handleCreateNewBlog = async (req, res) => {
@@ -127,5 +130,6 @@ module.exports = {
     handleDeleteOneBlog,
     handleEditBlog,
     handleCreateExcelBlog,
-    handleCreateNewSick
+    handleCreateNewSick,
+    handleCreateExcelSick
 }
