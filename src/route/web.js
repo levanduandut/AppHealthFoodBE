@@ -24,6 +24,7 @@ let initWebRoutes = (app) => {
     router.post("/api/user/getInfo", userController.handleInfo)
     router.get("/api/user/get-all-ingredient", userController.handleGetIngredient)
     router.post("/api/user/get-all-blog", userController.handleGetBlog)
+    router.post("/api/user/get-all-sick", userController.handleGetSick)
 
     //Admin Router
     // router.post("/api/admin/login",userController.handleLogin)

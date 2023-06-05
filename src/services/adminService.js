@@ -37,7 +37,7 @@ let createNewSick = (data, urlImage, req) => {
             } catch (error) {
                 console.log(error)
             }
-            await db.Blog.create({
+            await db.Sick.create({
                 name: data.name,
                 tag: data.tag,
                 detail: data.detail,

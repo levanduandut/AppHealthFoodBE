@@ -75,6 +75,16 @@ let handleGetBlog = async (req, res) => {
         blog,
     });
 }
+let handleGetSick = async (req, res) => {
+    let sickId = req.body.id;
+    // All, id
+    let sick = await userService.getAllSick(sickId);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        sick,
+    });
+}
 
 module.exports = {
     handleLogin,
@@ -82,5 +92,6 @@ module.exports = {
     handleGetIngredient,
     handleTransale,
     handleGetBlog,
-    handleRegister
+    handleRegister,
+    handleGetSick
 }

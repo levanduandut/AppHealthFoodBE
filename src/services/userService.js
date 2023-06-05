@@ -36,6 +36,28 @@ let createNewUser = (data) => {
         }
     });
 };
+let getAllSick = (sickId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let sick = "";
+            if (!sickId) {
+                sick = await db.Sick.findAll({
+
+                });
+            }
+            if (sickId && sickId !== "ALL") {
+                sick = await db.Sick.findAll({
+                    where: {
+                        id: sickId,
+                    },
+                });
+            }
+            resolve(sick);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let getAllBlog = (categoryId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -201,5 +223,6 @@ module.exports = {
     handleUserInfo,
     getAllIngredient,
     getAllBlog,
-    createNewUser
+    createNewUser,
+    getAllSick,
 }
