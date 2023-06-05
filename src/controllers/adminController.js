@@ -2,7 +2,7 @@ import adminService from "../services/adminService"
 
 //Sick
 let handleCreateNewSick = async (req, res) => {
-    let message = await adminService.createNewSick(req.body, req.file.filename,req);
+    let message = await adminService.createNewSick(req.body, req.file.filename, req);
     return res.status(200).json(message);
 }
 let handleCreateExcelSick = async (req, res) => {
@@ -10,9 +10,21 @@ let handleCreateExcelSick = async (req, res) => {
     return res.status(200).json(message);
 }
 
+let handleDeleteOneSick = async (req, res) => {
+    let idSick = req.body.id;
+    if (idSick) {
+        let mes = await adminService.deleteOneSick(idSick);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
+}
+
 //Blog
 let handleCreateNewBlog = async (req, res) => {
-    let message = await adminService.createNewBlog(req.body, req.file.filename,req);
+    let message = await adminService.createNewBlog(req.body, req.file.filename, req);
     return res.status(200).json(message);
 }
 let handleCreateExcelBlog = async (req, res) => {
@@ -36,7 +48,7 @@ let handleDeleteOneBlog = async (req, res) => {
 }
 let handleEditBlog = async (req, res) => {
     let data = req.body;
-    let message = await adminService.updateBlogData(data, req.file.filename,req);
+    let message = await adminService.updateBlogData(data, req.file.filename, req);
     return res.status(200).json(message);
 }
 
@@ -131,5 +143,6 @@ module.exports = {
     handleEditBlog,
     handleCreateExcelBlog,
     handleCreateNewSick,
-    handleCreateExcelSick
+    handleCreateExcelSick,
+    handleDeleteOneSick
 }

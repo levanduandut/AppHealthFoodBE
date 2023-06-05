@@ -71,6 +71,30 @@ let createExcelSick = (data) => {
         }
     });
 };
+let deleteOneSick = (idSick) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let sick = await db.Sick.findOne({ where: { id: idSick } });
+            if (!sick) {
+                resolve({
+                    errCode: 1,
+                    message: "Khong ton tai",
+                    idSick,
+                });
+            }
+            await db.Sick.destroy({
+                where: { id: idSick },
+            });
+            resolve({
+                errCode: 0,
+                message: "Delete OK",
+                idSick,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 //Blog
 let deleteOneBlog = (idBlog) => {
@@ -606,5 +630,6 @@ module.exports = {
     updateBlogData,
     createExcelBlog,
     createNewSick,
-    createExcelSick
+    createExcelSick,
+    deleteOneSick
 }
