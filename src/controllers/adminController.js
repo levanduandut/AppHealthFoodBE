@@ -23,7 +23,10 @@ let handleDeleteOneSick = async (req, res) => {
 let handleEditSick = async (req, res) => {
     let data = req.body;
     let message = await adminService.updateSickData(data, req);
-
+    return res.status(200).json(message);
+}
+let handleDeleteAllSick = async (req, res) => {
+    let message = await adminService.deleteAllSick(req.body);
     return res.status(200).json(message);
 }
 
@@ -150,5 +153,6 @@ module.exports = {
     handleCreateNewSick,
     handleCreateExcelSick,
     handleDeleteOneSick,
-    handleEditSick
+    handleEditSick,
+    handleDeleteAllSick
 }

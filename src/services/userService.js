@@ -36,23 +36,51 @@ let createNewUser = (data) => {
         }
     });
 };
-let getAllSick = (sickId) => {
+let getAllSick = (sickId, info) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let sick = "";
-            if (!sickId) {
-                sick = await db.Sick.findAll({
+            if (info === 0) {
+                let sick = "";
+                if (!sickId) {
+                    sick = await db.Sick.findAll({
+                        attributes: ['id', 'name'],
+                    });
+                }
+                if (sickId && sickId !== "ALL") {
+                    sick = await db.Sick.findAll({
+                        attributes: ['id', 'name'],
+                        where: {
+                            id: sickId,
+                        },
+                    });
+                }
+                const newArrayOfObj = sick.map(({
+                    id: key,
+                    name: value,
+                }) => ({
+                    key,
+                    value,
+                }));
+                console.log(newArrayOfObj);
+                resolve(newArrayOfObj);
+            }
+            else {
+                let sick = "";
+                if (!sickId) {
+                    sick = await db.Sick.findAll({
 
-                });
+                    });
+                }
+                if (sickId && sickId !== "ALL") {
+                    sick = await db.Sick.findAll({
+                        where: {
+                            id: sickId,
+                        },
+                    });
+                }
+                resolve(sick);
             }
-            if (sickId && sickId !== "ALL") {
-                sick = await db.Sick.findAll({
-                    where: {
-                        id: sickId,
-                    },
-                });
-            }
-            resolve(sick);
+
         } catch (error) {
             reject(error);
         }
@@ -112,17 +140,15 @@ let handleUserLogin = (email, password) => {
             if (isExist) {
                 // coparepass
                 let user = await db.User.findOne({
-                    attributes: ["id", "email", "password", "roleID", "jwtToken"],
+                    attributes: ["id","status", "email", "password", "sickId","roleID", "jwtToken"],
                     where: {
                         email: email,
                     },
                     raw: true,
                 });
-
                 if (user) {
                     let check = bcrypt.compareSync(password, user.password);
                     if (check) {
-
                         let payload = { id: user.id, roleID: user.roleID, email: email }
                         let jwtToken = null;
                         try {
@@ -130,7 +156,6 @@ let handleUserLogin = (email, password) => {
                         } catch (error) {
                             console.log(error)
                         }
-
                         let userx = await db.User.findOne({
                             where: {
                                 id: user.id,
@@ -140,6 +165,8 @@ let handleUserLogin = (email, password) => {
                             userx.jwtToken = jwtToken;
                             await userx.save();
                         }
+                        userData.status = userx.status;
+                        userData.sickId = userx.sickId;
                         userData.errCode = 0;
                         userData.errmessage = null;
                         userData.jwtToken = jwtToken;

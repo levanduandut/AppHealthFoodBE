@@ -57,9 +57,9 @@ let createExcelSick = (data) => {
         try {
             data.forEach(async (value, index) => {
                 await db.Sick.create({
-                    name: data.name,
-                    tag: data.tag,
-                    detail: data.detail,
+                    name: value.name,
+                    tag: value.tag,
+                    detail: value.detail,
                 });
             })
             resolve({
@@ -177,6 +177,25 @@ let updateSickData = (data, req) => {
         }
     });
 };
+let deleteAllSick = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data.Delete === 1) {
+                await db.Sick.destroy({
+                    where: {},
+                    truncate: true
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "Xóa tât cả thành công",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 
 //Blog
 let deleteOneBlog = (idBlog) => {
@@ -748,5 +767,6 @@ module.exports = {
     createNewSick,
     createExcelSick,
     deleteOneSick,
-    updateSickData
+    updateSickData,
+    deleteAllSick
 }

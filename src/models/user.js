@@ -22,14 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.INTEGER,
     age: DataTypes.INTEGER,
     address: DataTypes.STRING,
-    height: DataTypes.FLOAT,
-    weight: DataTypes.FLOAT,
-    sick: DataTypes.STRING,
-    heartBeat: DataTypes.FLOAT,
-    bloodPressureTh: DataTypes.FLOAT,
-    bloodPressureTr: DataTypes.FLOAT,
-    bloodSugar: DataTypes.FLOAT,
-    roleId: DataTypes.STRING
+    sickId: DataTypes.INTEGER,
+    roleId: DataTypes.STRING,
+    status: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'User',

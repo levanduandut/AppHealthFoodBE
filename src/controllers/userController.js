@@ -36,6 +36,8 @@ let handleLogin = async (req, res) => {
         errCode: userData.errCode,
         message: userData.errmessage,
         token: userData.jwtToken,
+        status: userData.status,
+        sickId:userData.sickId,
     })
 }
 let handleRegister = async (req, res) => {
@@ -77,8 +79,9 @@ let handleGetBlog = async (req, res) => {
 }
 let handleGetSick = async (req, res) => {
     let sickId = req.body.id;
+    let info = req.body.info;
     // All, id
-    let sick = await userService.getAllSick(sickId);
+    let sick = await userService.getAllSick(sickId, info);
     return res.status(200).json({
         errCode: 0,
         errMessage: "OK",

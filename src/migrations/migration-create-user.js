@@ -33,33 +33,19 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
-      height: {
-        type: Sequelize.FLOAT
+      sickId: {
+        type: Sequelize.INTEGER
       },
-      weight: {
-        type: Sequelize.FLOAT
+      status: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
-      sick: {
+      roleId: {
         type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      heartBeat: {
-        type: Sequelize.FLOAT
-      },
-      bloodPressureTh: {
-        type: Sequelize.FLOAT
-      },
-      bloodPressureTr: {
-        type: Sequelize.FLOAT
-      },
-      bloodSugar: {
-        type: Sequelize.FLOAT
-      },
-      roleId: {
-        type: Sequelize.STRING
       },
       updatedAt: {
         allowNull: false,

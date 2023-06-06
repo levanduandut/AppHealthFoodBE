@@ -52,6 +52,7 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/create-excel-sick", adminController.handleCreateExcelSick)
     router.put("/api/admin/edit-sick", multer.single('image'), adminController.handleEditSick)
     router.post("/api/admin/delete-sick", adminController.handleDeleteOneSick)
+    router.post("/api/admin/delete-all-sick", adminController.handleDeleteAllSick)
 
     return app.use("/", router)
 };
