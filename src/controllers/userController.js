@@ -21,7 +21,6 @@ let handleTransale = async (req, res) => {
         });
     }
 }
-
 let handleLogin = async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
@@ -58,6 +57,11 @@ let handleInfo = async (req, res) => {
         user
     })
 }
+let handleCreateHealth = async (req, res) => {
+    let message = await userService.createNewHealth(req.body);
+    return res.status(200).json(message);
+}
+
 let handleGetIngredient = async (req, res) => {
     let id = req.query.id; // All, id
     let ingre = await userService.getAllIngredient(id);
@@ -96,5 +100,6 @@ module.exports = {
     handleTransale,
     handleGetBlog,
     handleRegister,
-    handleGetSick
+    handleGetSick,
+    handleCreateHealth
 }

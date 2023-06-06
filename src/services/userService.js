@@ -5,6 +5,46 @@ import { raw } from "body-parser";
 import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+
+let createNewHealth = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data) {
+                await db.Health.create({
+                    userId: Number(data.id),
+                    sickId: Number(data.sickId),
+                    haTruong: Number(data.haTruong),
+                    haThu: Number(data.haThu),
+                    duongH: Number(data.duongH),
+                    height: Number(data.height),
+                    weight: Number(data.weight),
+                    bmi: Number(data.bmi),
+                });
+                let user = await db.User.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                });
+                user.status = 1;
+                await user.save();
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+            else {
+                resolve({
+                    errCode: 1,
+                    message: "Lưu không thành công !",
+                });
+            }
+        } catch (error) {
+            console.log(data.userId);
+            reject(error);
+        }
+    });
+};
+
 let createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -140,7 +180,7 @@ let handleUserLogin = (email, password) => {
             if (isExist) {
                 // coparepass
                 let user = await db.User.findOne({
-                    attributes: ["id","status", "email", "password", "sickId","roleID", "jwtToken"],
+                    attributes: ["id", "status", "email", "password", "sickId", "roleID", "jwtToken"],
                     where: {
                         email: email,
                     },
@@ -252,4 +292,5 @@ module.exports = {
     getAllBlog,
     createNewUser,
     getAllSick,
+    createNewHealth,
 }
