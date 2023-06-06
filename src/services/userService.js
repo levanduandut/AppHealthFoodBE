@@ -9,9 +9,12 @@ const salt = bcrypt.genSaltSync(10);
 let createNewHealth = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let vT = verifyToken(data.token);
+            console.log(vT.id);
+            let idUser = vT.id;
             if (data) {
                 await db.Health.create({
-                    userId: Number(data.id),
+                    userId: Number(idUser),
                     sickId: Number(data.sickId),
                     haTruong: Number(data.haTruong),
                     haThu: Number(data.haThu),
@@ -22,10 +25,11 @@ let createNewHealth = (data) => {
                 });
                 let user = await db.User.findOne({
                     where: {
-                        id: data.id,
+                        id: idUser,
                     },
                 });
                 user.status = 1;
+                user.sickId = data.sickId;
                 await user.save();
                 resolve({
                     errCode: 0,
@@ -39,12 +43,10 @@ let createNewHealth = (data) => {
                 });
             }
         } catch (error) {
-            console.log(data.userId);
             reject(error);
         }
     });
 };
-
 let createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -229,7 +231,7 @@ let handleUserLogin = (email, password) => {
             reject(error);
         }
     });
-}
+}   
 let checkUserEmail = userEmail => {
     return new Promise(async (resolve, reject) => {
         try {
