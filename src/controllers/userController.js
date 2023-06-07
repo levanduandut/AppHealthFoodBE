@@ -61,6 +61,13 @@ let handleCreateHealth = async (req, res) => {
     let message = await userService.createNewHealth(req.body);
     return res.status(200).json(message);
 }
+let handleGetHealth = async (req, res) => {
+    let info = await userService.getHealthInfo(req.body.token);
+    return res.status(200).json({
+        errCode: 0,
+        info
+    });
+}
 
 let handleGetIngredient = async (req, res) => {
     let id = req.query.id; // All, id
@@ -101,5 +108,6 @@ module.exports = {
     handleGetBlog,
     handleRegister,
     handleGetSick,
-    handleCreateHealth
+    handleCreateHealth,
+    handleGetHealth
 }

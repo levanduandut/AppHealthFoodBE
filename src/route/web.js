@@ -28,6 +28,7 @@ let initWebRoutes = (app) => {
 
     // User Health 
     router.post("/api/user/health-create", userController.handleCreateHealth)
+    router.post("/api/user/health-info", userController.handleGetHealth)
 
 
 

@@ -47,6 +47,36 @@ let createNewHealth = (data) => {
         }
     });
 };
+let getHealthInfo = (token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = verifyToken(token)
+            if (data.id) {
+                let user = await db.Health.findAll({
+                    limit: 1,
+                    where: {
+                        userId: data.id,
+                    },
+                    order: [['createdAt', 'DESC']]
+                })
+                if (user) {
+                    delete user.password;
+                    resolve(user);
+                } else {
+                    resolve({
+                        errCode: 1,
+                    });
+                }
+            }
+            resolve({
+                errCode: 2,
+            });
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -103,14 +133,29 @@ let getAllSick = (sickId, info) => {
                     key,
                     value,
                 }));
-                console.log(newArrayOfObj);
                 resolve(newArrayOfObj);
+            }
+            else if (info === 1) {
+                console.log("hehe");
+                let sick = "";
+                if (!sickId) {
+                    sick = await db.Sick.findAll({
+                        order: [['id', 'DESC']]
+                    });
+                }
+                if (sickId && sickId !== "ALL") {
+                    sick = await db.Sick.findAll({
+                        where: {
+                            id: sickId,
+                        },
+                    });
+                }
+                resolve(sick);
             }
             else {
                 let sick = "";
                 if (!sickId) {
                     sick = await db.Sick.findAll({
-
                     });
                 }
                 if (sickId && sickId !== "ALL") {
@@ -231,7 +276,7 @@ let handleUserLogin = (email, password) => {
             reject(error);
         }
     });
-}   
+}
 let checkUserEmail = userEmail => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -295,4 +340,5 @@ module.exports = {
     createNewUser,
     getAllSick,
     createNewHealth,
+    getHealthInfo
 }
