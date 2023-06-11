@@ -1,4 +1,4 @@
-import { where } from "sequelize";
+import { INTEGER, where } from "sequelize";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { raw } from "body-parser";
@@ -47,13 +47,13 @@ let createNewHealth = (data) => {
         }
     });
 };
-let getHealthInfo = (token) => {
+let getHealthInfo = (token, x) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = verifyToken(token)
+            let data = verifyToken(token);
             if (data.id) {
                 let user = await db.Health.findAll({
-                    limit: 1,
+                    limit: x,
                     where: {
                         userId: data.id,
                     },
@@ -308,11 +308,13 @@ let hashUserPassword = (password) => {
 let verifyToken = (token) => {
     let key = process.env.JWT_SECRET;
     let data = null;
-    try {
-        let encoded = jwt.verify(token, key);
-        data = encoded;
-    } catch (error) {
-        console.log(error)
+    if (token) {
+        try {
+            let encoded = jwt.verify(token, key);
+            data = encoded;
+        } catch (error) {
+            console.log(error)
+        }
     }
     return data;
 }
@@ -320,13 +322,19 @@ let handleUserInfo = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = verifyToken(token)
-            let user = await db.User.findOne({ where: { id: data.id }, raw: true });
-            if (user) {
-                delete user.password;
-                resolve(user);
-            } else {
+            if (data.id) {
+                let user = await db.User.findOne({ where: { id: data.id }, raw: true });
+                if (user) {
+                    delete user.password;
+                    resolve(user);
+                } else {
+                    resolve({});
+                }
+            }
+            else {
                 resolve({});
             }
+
         } catch (e) {
             reject(e);
         }

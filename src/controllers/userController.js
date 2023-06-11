@@ -62,7 +62,7 @@ let handleCreateHealth = async (req, res) => {
     return res.status(200).json(message);
 }
 let handleGetHealth = async (req, res) => {
-    let info = await userService.getHealthInfo(req.body.token);
+    let info = await userService.getHealthInfo(req.body.token,req.body.limit);
     return res.status(200).json({
         errCode: 0,
         info
