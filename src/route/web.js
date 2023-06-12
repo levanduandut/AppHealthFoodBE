@@ -66,6 +66,7 @@ let initWebRoutes = (app) => {
     //Admin Exercise
     router.post("/api/admin/create-new-exercise-category", adminController.handleCreateExerciseCa)
     router.post("/api/admin/delete-exercise-category", adminController.handleDeleteExerciseCa)
+    router.put("/api/admin/edit-exercise-category", adminController.handleEditExerciseCa)
     
 
     return app.use("/", router)

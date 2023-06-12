@@ -27,7 +27,6 @@ let createNewExerciseCa = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (data) {
-                console.log(data + "ggu");
                 await db.CategoryExercise.create({
                     name: data.name,
                     detail: data.detail,
@@ -48,7 +47,6 @@ let createNewExerciseCa = (data) => {
         }
     });
 };
-
 let deleteOneExerciseCa = (idExeCa) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -68,6 +66,41 @@ let deleteOneExerciseCa = (idExeCa) => {
                 message: "Xóa thành công !",
                 exeCa,
             });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let updateExeCaData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    message: "Không có id CategoryExercise",
+                    data,
+                });
+            } else {
+                let exeCa = await db.CategoryExercise.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                });
+                if (exeCa) {
+                    exeCa.name = data.name,
+                        exeCa.detail = data.detail,
+                        await exeCa.save();
+                    resolve({
+                        errCode: 0,
+                        message: "Da sua",
+                    });
+                } else {
+                    resolve({
+                        errCode: 2,
+                        message: "Khong sua dc ",
+                    });
+                }
+            }
         } catch (error) {
             reject(error);
         }
@@ -822,5 +855,6 @@ module.exports = {
     updateSickData,
     deleteAllSick,
     createNewExerciseCa,
-    deleteOneExerciseCa
+    deleteOneExerciseCa,
+    updateExeCaData
 }
