@@ -6,6 +6,29 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getAllExerciseCa = (categoryId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = "";
+            if (!categoryId) {
+                data = await db.CategoryExercise.findAll({
+
+                });
+            }
+            if (categoryId && categoryId !== "ALL") {
+                data = await db.CategoryExercise.findAll({
+                    where: {
+                        categoryId: categoryId,
+                    },
+                });
+            }
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let createNewHealth = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -51,26 +74,36 @@ let getHealthInfo = (token, x) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = verifyToken(token);
-            if (data.id) {
-                let user = await db.Health.findAll({
-                    limit: x,
-                    where: {
-                        userId: data.id,
-                    },
-                    order: [['createdAt', 'DESC']]
-                })
-                if (user) {
-                    delete user.password;
-                    resolve(user);
-                } else {
+            if (data) {
+                if (data.id) {
+                    let user = await db.Health.findAll({
+                        limit: x,
+                        where: {
+                            userId: data.id,
+                        },
+                        order: [['createdAt', 'DESC']]
+                    })
+                    if (user) {
+                        delete user.password;
+                        resolve(user);
+                    } else {
+                        resolve({
+                            errCode: 1,
+                        });
+                    }
+                }
+                else {
                     resolve({
-                        errCode: 1,
+                        errCode: 2,
                     });
                 }
             }
-            resolve({
-                errCode: 2,
-            });
+            else {
+                resolve({
+                    errCode: 3,
+                });
+            }
+
 
         } catch (error) {
             reject(error);
@@ -348,5 +381,6 @@ module.exports = {
     createNewUser,
     getAllSick,
     createNewHealth,
-    getHealthInfo
+    getHealthInfo,
+    getAllExerciseCa
 }

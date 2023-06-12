@@ -1,5 +1,24 @@
 import adminService from "../services/adminService"
 
+//Exercise
+
+let handleCreateExerciseCa = async (req, res) => {
+    let message = await adminService.createNewExerciseCa(req.body);
+    return res.status(200).json(message);
+}
+let handleDeleteExerciseCa = async (req, res) => {
+    let id = req.body.id;
+    if (id) {
+        let mes = await adminService.deleteOneExerciseCa(id);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
+}
+
+
 //Sick
 let handleCreateNewSick = async (req, res) => {
     let message = await adminService.createNewSick(req.body, req.file.filename, req);
@@ -154,5 +173,7 @@ module.exports = {
     handleCreateExcelSick,
     handleDeleteOneSick,
     handleEditSick,
-    handleDeleteAllSick
+    handleDeleteAllSick,
+    handleCreateExerciseCa,
+    handleDeleteExerciseCa
 }

@@ -14,10 +14,6 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('healthfood', 'root', null, {
     host: 'localhost',
     dialect: 'mysql',
-    dialectOptions: {
-        useUTC: false, // for reading from database
-    },
-    timezone: '+07:00',
 });
 
 let connectDB = async () => {

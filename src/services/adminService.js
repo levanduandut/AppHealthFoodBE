@@ -22,6 +22,58 @@ const storage = new Storage({
 })
 const buckket = storage.bucket('healthfood-do');
 
+//ExerciseCa
+let createNewExerciseCa = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data) {
+                console.log(data + "ggu");
+                await db.CategoryExercise.create({
+                    name: data.name,
+                    detail: data.detail,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+            else {
+                resolve({
+                    errCode: 0,
+                    message: "Missing Data !",
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+let deleteOneExerciseCa = (idExeCa) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let exeCa = await db.CategoryExercise.findOne({ where: { id: idExeCa } });
+            if (!exeCa) {
+                resolve({
+                    errCode: 1,
+                    message: "Không tồn tại !",
+                    exeCa,
+                });
+            }
+            await db.CategoryExercise.destroy({
+                where: { id: idExeCa },
+            });
+            resolve({
+                errCode: 0,
+                message: "Xóa thành công !",
+                exeCa,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 //Sick
 let createNewSick = (data, urlImage, req) => {
     return new Promise(async (resolve, reject) => {
@@ -768,5 +820,7 @@ module.exports = {
     createExcelSick,
     deleteOneSick,
     updateSickData,
-    deleteAllSick
+    deleteAllSick,
+    createNewExerciseCa,
+    deleteOneExerciseCa
 }

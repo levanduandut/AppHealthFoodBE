@@ -8,6 +8,18 @@ const translate = new Translate({
     credentials: XTRAN,
     projectId: XTRAN.project_id
 });
+
+let handleGetExerciseCa = async (req, res) => {
+    let categoryId = req.body.categoryId;
+    // All, id
+    let exerciseCa = await userService.getAllExerciseCa(categoryId);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        exerciseCa,
+    });
+};
+
 let handleTransale = async (req, res) => {
     try {
         let data = await translate.translate(req.body.text, req.body.lang);
@@ -109,5 +121,6 @@ module.exports = {
     handleRegister,
     handleGetSick,
     handleCreateHealth,
-    handleGetHealth
+    handleGetHealth,
+    handleGetExerciseCa
 }
