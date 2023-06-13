@@ -18,6 +18,9 @@ module.exports = {
             categoryId: {
                 type: Sequelize.INTEGER
             },
+            sickId: {
+                type: Sequelize.INTEGER
+            },
             detail: {
                 type: Sequelize.TEXT
             },

@@ -22,6 +22,93 @@ const storage = new Storage({
 })
 const buckket = storage.bucket('healthfood-do');
 
+//FoodCa
+let createNewFoodCa = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log(data);
+            if (data) {
+                await db.CategoryFood.create({
+                    name: data.name,
+                    detail: data.detail,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+            else {
+                resolve({
+                    errCode: 0,
+                    message: "Missing Data !",
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let deleteFoodCa = (idFoodCa) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let foodCa = await db.CategoryFood.findOne({ where: { id: idFoodCa } });
+            if (!foodCa) {
+                resolve({
+                    errCode: 1,
+                    message: "Không tồn tại !",
+                    foodCa,
+                });
+            }
+            await db.CategoryFood.destroy({
+                where: { id: idFoodCa },
+            });
+            resolve({
+                errCode: 0,
+                message: "Xóa thành công !",
+                foodCa,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let updateFoodCaData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    message: "Không có id CategoryFood",
+                    data,
+                });
+            } else {
+                let foodCa = await db.CategoryFood.findOne({
+                    where: {
+                        id: data.id,
+                    },
+                });
+                if (foodCa) {
+                    foodCa.name = data.name,
+                        foodCa.detail = data.detail,
+                        await foodCa.save();
+                    resolve({
+                        errCode: 0,
+                        message: "Da sua",
+                    });
+                } else {
+                    resolve({
+                        errCode: 2,
+                        message: "Khong sua dc ",
+                    });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+
 //ExerciseCa
 let createNewExerciseCa = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -1064,5 +1151,8 @@ module.exports = {
     deleteOneExercise,
     updateExeData,
     createExcelExe,
-    deleteAllExe
+    deleteAllExe,
+    createNewFoodCa,
+    deleteFoodCa,
+    updateFoodCaData
 }

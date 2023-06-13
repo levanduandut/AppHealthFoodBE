@@ -1,7 +1,31 @@
 import adminService from "../services/adminService"
 
-//Exercise Category
 
+//Food Category
+
+let handleCreateFoodCa = async (req, res) => {
+    let message = await adminService.createNewFoodCa(req.body);
+    return res.status(200).json(message);
+}
+let handleDeleteFoodCa = async (req, res) => {
+    let id = req.body.id;
+    if (id) {
+        let mes = await adminService.deleteFoodCa(id);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
+}
+let handleEditFoodCa = async (req, res) => {
+    let data = req.body;
+    let message = await adminService.updateFoodCaData(data);
+    return res.status(200).json(message);
+}
+
+
+//Exercise Category
 let handleCreateExerciseCa = async (req, res) => {
     let message = await adminService.createNewExerciseCa(req.body);
     return res.status(200).json(message);
@@ -45,6 +69,7 @@ let handleEditExe = async (req, res) => {
     return res.status(200).json(message);
 }
 let handleCreateExcelExe = async (req, res) => {
+    console.log(req);
     let message = await adminService.createExcelExe(req.body);
     return res.status(200).json(message);
 }
@@ -215,5 +240,8 @@ module.exports = {
     handleDeleteExe,
     handleEditExe,
     handleCreateExcelExe,
-    handleDeleteAllExe
+    handleDeleteAllExe,
+    handleCreateFoodCa,
+    handleDeleteFoodCa,
+    handleEditFoodCa
 }
