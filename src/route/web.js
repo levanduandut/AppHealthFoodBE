@@ -83,6 +83,9 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-food-category", adminController.handleDeleteFoodCa)
     router.put("/api/admin/edit-food-category", adminController.handleEditFoodCa)
 
+    router.post("/api/admin/create-new-food", multer.single('image'), adminController.handleCreateNewFood)
+
+
 
     return app.use("/", router)
 };

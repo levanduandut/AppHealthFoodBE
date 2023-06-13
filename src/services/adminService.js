@@ -108,6 +108,63 @@ let updateFoodCaData = (data) => {
     });
 };
 
+//Food
+let createNewFood = (data, req) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (req.file) {
+                try {
+                    if (req.file) {
+                        const blob = buckket.file(req.file.originalname);
+                        const blobStream = blob.createWriteStream();
+                        await blobStream.on('finish', () => {
+                        })
+                        blobStream.end(req.file.buffer);
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+                await db.Food.create({
+                    name: data.name,
+                    detail: data.detail,
+                    tag: data.tag,
+                    categoryId: data.categoryId,
+                    sickId: data.sickId,
+                    time: data.time,
+                    star: data.star,
+                    calo: data.calo,
+                    image: req.file.originalname,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+            else {
+                await db.Food.create({
+                    name: data.name,
+                    detail: data.detail,
+                    tag: data.tag,
+                    categoryId: data.categoryId,
+                    sickId: data.sickId,
+                    time: data.time,
+                    star: data.star,
+                    calo: data.calo,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+        } catch (error) {
+            reject({
+                errCode: 3,
+                message: "Error !",
+            });
+        }
+    });
+};
+
 
 //ExerciseCa
 let createNewExerciseCa = (data) => {
@@ -1154,5 +1211,6 @@ module.exports = {
     deleteAllExe,
     createNewFoodCa,
     deleteFoodCa,
-    updateFoodCaData
+    updateFoodCaData,
+    createNewFood
 }

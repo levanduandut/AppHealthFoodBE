@@ -24,6 +24,12 @@ let handleEditFoodCa = async (req, res) => {
     return res.status(200).json(message);
 }
 
+//Food
+let handleCreateNewFood = async (req, res) => {
+    let message = await adminService.createNewFood(req.body, req);
+    return res.status(200).json(message);
+}
+
 
 //Exercise Category
 let handleCreateExerciseCa = async (req, res) => {
@@ -243,5 +249,6 @@ module.exports = {
     handleDeleteAllExe,
     handleCreateFoodCa,
     handleDeleteFoodCa,
-    handleEditFoodCa
+    handleEditFoodCa,
+    handleCreateNewFood
 }
