@@ -19,6 +19,16 @@ let handleGetExerciseCa = async (req, res) => {
         exerciseCa,
     });
 };
+let handleGetExercise = async (req, res) => {
+    let categoryId = req.body.categoryId;
+    // All, id
+    let exercise = await userService.getAllExercise(categoryId);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        exercise,
+    });
+};
 
 let handleTransale = async (req, res) => {
     try {
@@ -122,5 +132,6 @@ module.exports = {
     handleGetSick,
     handleCreateHealth,
     handleGetHealth,
-    handleGetExerciseCa
+    handleGetExerciseCa,
+    handleGetExercise
 }

@@ -26,6 +26,7 @@ const buckket = storage.bucket('healthfood-do');
 let createNewExerciseCa = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(data);
             if (data) {
                 await db.CategoryExercise.create({
                     name: data.name,
@@ -101,6 +102,81 @@ let updateExeCaData = (data) => {
                     });
                 }
             }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+// Exe
+let createNewExe = (data, req) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (req.file) {
+                try {
+                    if (req.file) {
+                        const blob = buckket.file(req.file.originalname);
+                        const blobStream = blob.createWriteStream();
+                        await blobStream.on('finish', () => {
+                        })
+                        blobStream.end(req.file.buffer);
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+                await db.Exercise.create({
+                    name: data.name,
+                    detail: data.detail,
+                    categoryId: data.categoryId,
+                    time: data.time,
+                    star: data.star,
+                    image: req.file.originalname,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+            else {
+                await db.Exercise.create({
+                    name: data.name,
+                    detail: data.detail,
+                    categoryId: data.categoryId,
+                    time: data.time,
+                    star: data.star,
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+        } catch (error) {
+            reject({
+                errCode: 3,
+                message: "Error !",
+            });
+        }
+    });
+};
+let deleteOneExercise = (idExe) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let exeCa = await db.Exercise.findOne({ where: { id: idExe } });
+            if (!exeCa) {
+                resolve({
+                    errCode: 1,
+                    message: "Không tồn tại !",
+                    exeCa,
+                });
+            }
+            await db.Exercise.destroy({
+                where: { id: idExe },
+            });
+            resolve({
+                errCode: 0,
+                message: "Xóa thành công !",
+                exeCa,
+            });
         } catch (error) {
             reject(error);
         }
@@ -856,5 +932,7 @@ module.exports = {
     deleteAllSick,
     createNewExerciseCa,
     deleteOneExerciseCa,
-    updateExeCaData
+    updateExeCaData,
+    createNewExe,
+    deleteOneExercise
 }

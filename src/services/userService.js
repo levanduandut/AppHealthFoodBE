@@ -28,6 +28,28 @@ let getAllExerciseCa = (categoryId) => {
         }
     });
 };
+let getAllExercise = (categoryId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = "";
+            if (!categoryId) {
+                data = await db.Exercise.findAll({
+
+                });
+            }
+            if (categoryId && categoryId !== "ALL") {
+                data = await db.Exercise.findAll({
+                    where: {
+                        categoryId: categoryId,
+                    },
+                });
+            }
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 let createNewHealth = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -382,5 +404,6 @@ module.exports = {
     getAllSick,
     createNewHealth,
     getHealthInfo,
-    getAllExerciseCa
+    getAllExerciseCa,
+    getAllExercise
 }

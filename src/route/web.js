@@ -32,6 +32,7 @@ let initWebRoutes = (app) => {
 
     //User Exercise
     router.post("/api/user/get-exercise-category", userController.handleGetExerciseCa)
+    router.post("/api/user/get-exercise", userController.handleGetExercise)
 
 
 
@@ -63,11 +64,13 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-sick", adminController.handleDeleteOneSick)
     router.post("/api/admin/delete-all-sick", adminController.handleDeleteAllSick)
 
-    //Admin Exercise
+    //Admin Exercise Category
     router.post("/api/admin/create-new-exercise-category", adminController.handleCreateExerciseCa)
     router.post("/api/admin/delete-exercise-category", adminController.handleDeleteExerciseCa)
     router.put("/api/admin/edit-exercise-category", adminController.handleEditExerciseCa)
-    
+
+    router.post("/api/admin/create-new-exercise", multer.single('image'), adminController.handleCreateNewExe)
+    router.post("/api/admin/delete-exercise", adminController.handleDeleteExe)
 
     return app.use("/", router)
 };

@@ -17,13 +17,27 @@ let handleDeleteExerciseCa = async (req, res) => {
         });
     }
 }
-
 let handleEditExerciseCa = async (req, res) => {
-
     let data = req.body;
     let message = await adminService.updateExeCaData(data);
     return res.status(200).json(message);
 }
+let handleCreateNewExe = async (req, res) => {
+    let message = await adminService.createNewExe(req.body, req);
+    return res.status(200).json(message);
+}
+let handleDeleteExe = async (req, res) => {
+    let id = req.body.id;
+    if (id) {
+        let mes = await adminService.deleteOneExercise(id);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
+}
+
 
 
 //Sick
@@ -183,5 +197,7 @@ module.exports = {
     handleDeleteAllSick,
     handleCreateExerciseCa,
     handleDeleteExerciseCa,
-    handleEditExerciseCa
+    handleEditExerciseCa,
+    handleCreateNewExe,
+    handleDeleteExe
 }
