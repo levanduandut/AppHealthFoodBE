@@ -1,6 +1,6 @@
 import adminService from "../services/adminService"
 
-//Exercise
+//Exercise Category
 
 let handleCreateExerciseCa = async (req, res) => {
     let message = await adminService.createNewExerciseCa(req.body);
@@ -22,6 +22,8 @@ let handleEditExerciseCa = async (req, res) => {
     let message = await adminService.updateExeCaData(data);
     return res.status(200).json(message);
 }
+
+// Exercise
 let handleCreateNewExe = async (req, res) => {
     let message = await adminService.createNewExe(req.body, req);
     return res.status(200).json(message);
@@ -42,8 +44,14 @@ let handleEditExe = async (req, res) => {
     let message = await adminService.updateExeData(data, req);
     return res.status(200).json(message);
 }
-
-
+let handleCreateExcelExe = async (req, res) => {
+    let message = await adminService.createExcelExe(req.body);
+    return res.status(200).json(message);
+}
+let handleDeleteAllExe = async (req, res) => {
+    let message = await adminService.deleteAllExe(req.body);
+    return res.status(200).json(message);
+}
 
 //Sick
 let handleCreateNewSick = async (req, res) => {
@@ -205,5 +213,7 @@ module.exports = {
     handleEditExerciseCa,
     handleCreateNewExe,
     handleDeleteExe,
-    handleEditExe
+    handleEditExe,
+    handleCreateExcelExe,
+    handleDeleteAllExe
 }

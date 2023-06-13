@@ -72,6 +72,8 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/create-new-exercise", multer.single('image'), adminController.handleCreateNewExe)
     router.post("/api/admin/delete-exercise", adminController.handleDeleteExe)
     router.put("/api/admin/edit-exercise", multer.single('image'), adminController.handleEditExe)
+    router.post("/api/admin/create-excel-exercise", adminController.handleCreateExcelExe)
+    router.post("/api/admin/delete-all-exercise", adminController.handleDeleteAllExe)
 
     return app.use("/", router)
 };

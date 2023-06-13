@@ -201,7 +201,7 @@ let updateExeData = (data, req) => {
                 if (!data.id) {
                     resolve({
                         errCode: 1,
-                        message: "Không có id bệnh",
+                        message: "Không có id Exercise",
                         data,
                     });
                 } else {
@@ -238,18 +238,18 @@ let updateExeData = (data, req) => {
                         data,
                     });
                 } else {
-                    let sick = await db.Sick.findOne({
+                    let exe = await db.Exercise.findOne({
                         where: {
                             id: data.id,
                         },
                     });
-                    if (sick) {
+                    if (exe) {
                         exe.name = data.name,
                             exe.detail = data.detail,
                             exe.categoryId = data.categoryId,
                             exe.time = data.time,
                             exe.star = data.star,
-                            await sick.save();
+                            await exe.save();
                         resolve({
                             errCode: 0,
                             message: "Đã sửa",
@@ -268,6 +268,47 @@ let updateExeData = (data, req) => {
         }
     });
 };
+let createExcelExe = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            data.forEach(async (value, index) => {
+                await db.Exercise.create({
+                    name: value.name,
+                    detail: value.detail,
+                    categoryId: Number(value.categoryId),
+                    time: Number(value.time),
+                    star: Number(value.star),
+                });
+            })
+            resolve({
+                errCode: 0,
+                message: "Lưu thành công !",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let deleteAllExe = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data.Delete === 1) {
+                await db.Exercise.destroy({
+                    where: {},
+                    truncate: true
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "Xóa tât cả thành công",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+
 
 //Sick
 let createNewSick = (data, urlImage, req) => {
@@ -1021,5 +1062,7 @@ module.exports = {
     updateExeCaData,
     createNewExe,
     deleteOneExercise,
-    updateExeData
+    updateExeData,
+    createExcelExe,
+    deleteAllExe
 }
