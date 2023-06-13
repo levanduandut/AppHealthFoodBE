@@ -37,6 +37,11 @@ let handleDeleteExe = async (req, res) => {
         });
     }
 }
+let handleEditExe = async (req, res) => {
+    let data = req.body;
+    let message = await adminService.updateExeData(data, req);
+    return res.status(200).json(message);
+}
 
 
 
@@ -199,5 +204,6 @@ module.exports = {
     handleDeleteExerciseCa,
     handleEditExerciseCa,
     handleCreateNewExe,
-    handleDeleteExe
+    handleDeleteExe,
+    handleEditExe
 }

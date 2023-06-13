@@ -182,6 +182,92 @@ let deleteOneExercise = (idExe) => {
         }
     });
 };
+let updateExeData = (data, req) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (req.file) {
+                try {
+                    if (req.file) {
+                        console.log(req.file)
+                        const blob = buckket.file(req.file.originalname);
+                        const blobStream = blob.createWriteStream();
+                        await blobStream.on('finish', () => {
+                        })
+                        blobStream.end(req.file.buffer);
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id bệnh",
+                        data,
+                    });
+                } else {
+                    let exe = await db.Exercise.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (exe) {
+                        exe.name = data.name,
+                            exe.detail = data.detail,
+                            exe.categoryId = data.categoryId,
+                            exe.time = data.time,
+                            exe.star = data.star,
+                            exe.image = req.file.originalname,
+                            await exe.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+            else {
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id bệnh",
+                        data,
+                    });
+                } else {
+                    let sick = await db.Sick.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (sick) {
+                        exe.name = data.name,
+                            exe.detail = data.detail,
+                            exe.categoryId = data.categoryId,
+                            exe.time = data.time,
+                            exe.star = data.star,
+                            await sick.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 //Sick
 let createNewSick = (data, urlImage, req) => {
@@ -934,5 +1020,6 @@ module.exports = {
     deleteOneExerciseCa,
     updateExeCaData,
     createNewExe,
-    deleteOneExercise
+    deleteOneExercise,
+    updateExeData
 }
