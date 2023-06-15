@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
         tag: DataTypes.STRING,
         categoryId: DataTypes.INTEGER,
         sickId: DataTypes.INTEGER,
+        sickId1: DataTypes.INTEGER,
+        sickId2: DataTypes.INTEGER,
         detail: DataTypes.TEXT,
         image: DataTypes.TEXT,
         star: DataTypes.FLOAT,

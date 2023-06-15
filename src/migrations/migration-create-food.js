@@ -21,6 +21,12 @@ module.exports = {
             sickId: {
                 type: Sequelize.INTEGER
             },
+            sickId1: {
+                type: Sequelize.INTEGER
+            },
+            sickId2: {
+                type: Sequelize.INTEGER
+            },
             detail: {
                 type: Sequelize.TEXT
             },

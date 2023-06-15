@@ -112,6 +112,7 @@ let updateFoodCaData = (data) => {
 let createNewFood = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(data);
             if (req.file) {
                 try {
                     if (req.file) {
@@ -130,6 +131,8 @@ let createNewFood = (data, req) => {
                     tag: data.tag,
                     categoryId: data.categoryId,
                     sickId: data.sickId,
+                    sickId1: data.sickId1,
+                    sickId2: data.sickId2,
                     time: data.time,
                     star: data.star,
                     calo: data.calo,
@@ -147,6 +150,8 @@ let createNewFood = (data, req) => {
                     tag: data.tag,
                     categoryId: data.categoryId,
                     sickId: data.sickId,
+                    sickId1: data.sickId1,
+                    sickId2: data.sickId2,
                     time: data.time,
                     star: data.star,
                     calo: data.calo,
@@ -161,6 +166,127 @@ let createNewFood = (data, req) => {
                 errCode: 3,
                 message: "Error !",
             });
+        }
+    });
+};
+let deleteOneFood = (idFood) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let food = await db.Food.findOne({ where: { id: idFood } });
+            if (!food) {
+                resolve({
+                    errCode: 1,
+                    message: "Không tồn tại !",
+                    food,
+                });
+            }
+            await db.Food.destroy({
+                where: { id: idFood },
+            });
+            resolve({
+                errCode: 0,
+                message: "Xóa thành công !",
+                food,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let updateFoodData = (data, req) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (req.file) {
+                try {
+                    if (req.file) {
+                        console.log(req.file)
+                        const blob = buckket.file(req.file.originalname);
+                        const blobStream = blob.createWriteStream();
+                        await blobStream.on('finish', () => {
+                        })
+                        blobStream.end(req.file.buffer);
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id Exercise",
+                        data,
+                    });
+                } else {
+                    let food = await db.Food.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (food) {
+
+                        food.name = data.name,
+                            food.detail = data.detail,
+                            food.tag = data.tag,
+                            food.categoryId = data.categoryId,
+                            food.sickId = data.sickId,
+                            food.sickId1 = data.sickId1,
+                            food.sickId2 = data.sickId2,
+                            food.time = data.time,
+                            food.star = data.star,
+                            food.calo = data.calo,
+                            food.image = req.file.originalname,
+                            await food.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+            else {
+                if (!data.id) {
+                    resolve({
+                        errCode: 1,
+                        message: "Không có id bệnh",
+                        data,
+                    });
+                } else {
+                    let food = await db.Food.findOne({
+                        where: {
+                            id: data.id,
+                        },
+                    });
+                    if (food) {
+                        food.name = data.name,
+                            food.detail = data.detail,
+                            food.tag = data.tag,
+                            food.categoryId = data.categoryId,
+                            food.sickId = data.sickId,
+                            food.sickId1 = data.sickId1,
+                            food.sickId2 = data.sickId2,
+                            food.time = data.time,
+                            food.star = data.star,
+                            food.calo = data.calo,
+                            await food.save();
+                        resolve({
+                            errCode: 0,
+                            message: "Đã sửa",
+                        });
+                    } else {
+                        resolve({
+                            errCode: 2,
+                            message: "Không sửa được !",
+                        });
+                    }
+                }
+            }
+
+        } catch (error) {
+            reject(error);
         }
     });
 };
@@ -1212,5 +1338,7 @@ module.exports = {
     createNewFoodCa,
     deleteFoodCa,
     updateFoodCaData,
-    createNewFood
+    createNewFood,
+    deleteOneFood,
+    updateFoodData
 }

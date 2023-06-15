@@ -29,6 +29,23 @@ let handleCreateNewFood = async (req, res) => {
     let message = await adminService.createNewFood(req.body, req);
     return res.status(200).json(message);
 }
+let handleDeleteFood = async (req, res) => {
+    let id = req.body.id;
+    if (id) {
+        let mes = await adminService.deleteOneFood(id);
+        return res.status(200).json(mes);
+    } else {
+        return res.status(200).json({
+            mes: "Fall",
+        });
+    }
+}
+let handleEditFood = async (req, res) => {
+    let data = req.body;
+    let message = await adminService.updateFoodData(data, req);
+    return res.status(200).json(message);
+}
+
 
 
 //Exercise Category
@@ -250,5 +267,7 @@ module.exports = {
     handleCreateFoodCa,
     handleDeleteFoodCa,
     handleEditFoodCa,
-    handleCreateNewFood
+    handleCreateNewFood,
+    handleDeleteFood,
+    handleEditFood
 }

@@ -8,7 +8,15 @@ const translate = new Translate({
     credentials: XTRAN,
     projectId: XTRAN.project_id
 });
-
+let handleGetFood = async (req, res) => {
+    let data = req.query;
+    let food = await userService.getAllFood(data);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        food,
+    });
+};
 let handleGetFoodCa = async (req, res) => {
     let categoryId = req.body.categoryId;
     // All, id
@@ -144,5 +152,6 @@ module.exports = {
     handleGetHealth,
     handleGetExerciseCa,
     handleGetExercise,
-    handleGetFoodCa
+    handleGetFoodCa,
+    handleGetFood
 }

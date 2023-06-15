@@ -6,6 +6,47 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getAllFood = (dataId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = "";
+            if (dataId.categoryId) {
+                let categoryId = dataId.categoryId;
+                if (categoryId==="ALL") {
+                    data = await db.Food.findAll({
+
+                    });
+                }
+                if (categoryId && categoryId !== "ALL") {
+                    data = await db.Food.findAll({
+                        where: {
+                            categoryId: categoryId,
+                        },
+                    });
+                }
+            }
+            else{
+                let sickId = dataId.sickId;
+                if (sickId==="ALL") {
+                    data = await db.Food.findAll({
+
+                    });
+                }
+                if (sickId && sickId !== "ALL") {
+                    data = await db.Food.findAll({
+                        where: {
+                            sickId: sickId,
+                        },
+                    });
+                }
+            }
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let getAllFoodCa = (categoryId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -429,5 +470,6 @@ module.exports = {
     getHealthInfo,
     getAllExerciseCa,
     getAllExercise,
-    getAllFoodCa
+    getAllFoodCa,
+    getAllFood
 }
