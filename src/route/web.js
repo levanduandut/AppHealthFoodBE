@@ -41,6 +41,7 @@ let initWebRoutes = (app) => {
     router.post("/api/user/get-food", userController.handleGetFood)
 
     router.post("/api/user/create-absorb", userController.handleCreateAbsorb)
+    router.post("/api/user/get-absorb", userController.handleGetAbsorb)
 
     //Admin Router
     // router.post("/api/admin/login",userController.handleLogin)

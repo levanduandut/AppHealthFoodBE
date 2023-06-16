@@ -19,6 +19,13 @@ let handleCreateAbsorb = async (req, res) => {
     }
     return res.status(200).json(mes);
 }
+let handleGetAbsorb = async (req, res) => {
+    let info = await userService.getAbsorbInfo(req.body.token, req.body.limit);
+    return res.status(200).json({
+        errCode: 0,
+        info
+    });
+};
 let handleGetFood = async (req, res) => {
     let data = req.body;
     let food = await userService.getAllFood(data);
@@ -165,5 +172,6 @@ module.exports = {
     handleGetExercise,
     handleGetFoodCa,
     handleGetFood,
-    handleCreateAbsorb
+    handleCreateAbsorb,
+    handleGetAbsorb
 }

@@ -6,6 +6,46 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getAbsorbInfo = (token, x) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = verifyToken(token);
+            if (data) {
+                if (data.id) {
+                    let user = await db.Absorb.findAll({
+                        limit: x,
+                        where: {
+                            idUser: 2,
+                        },
+                        order: [['createdAt', 'DESC']]
+                    })
+                    if (user) {
+                        resolve(user);
+                    } else {
+                        resolve({
+                            errCode: 1,
+                        });
+                    }
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                    });
+                }
+            }
+            else {
+                resolve({
+                    errCode: 3,
+                });
+            }
+
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let createNewAbsorb = (data, token) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -42,7 +82,6 @@ let createNewAbsorb = (data, token) => {
         }
     });
 };
-
 let getAllFood = (dataId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -83,7 +122,6 @@ let getAllFood = (dataId) => {
         }
     });
 };
-
 let getAllFoodCa = (categoryId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -106,7 +144,6 @@ let getAllFoodCa = (categoryId) => {
         }
     });
 };
-
 let getAllExerciseCa = (categoryId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -509,5 +546,6 @@ module.exports = {
     getAllExercise,
     getAllFoodCa,
     getAllFood,
-    createNewAbsorb
+    createNewAbsorb,
+    getAbsorbInfo
 }
