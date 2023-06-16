@@ -8,8 +8,19 @@ const translate = new Translate({
     credentials: XTRAN,
     projectId: XTRAN.project_id
 });
+let handleCreateAbsorb = async (req, res) => {
+    let mes = '';
+    console.log(req.body);
+    if (req.body) {
+        mes = await userService.createNewAbsorb(req.body.data, req.body.token);
+    }
+    else {
+        mes = "Fail";
+    }
+    return res.status(200).json(mes);
+}
 let handleGetFood = async (req, res) => {
-    let data = req.query;
+    let data = req.body;
     let food = await userService.getAllFood(data);
     return res.status(200).json({
         errCode: 0,
@@ -76,7 +87,7 @@ let handleLogin = async (req, res) => {
         message: userData.errmessage,
         token: userData.jwtToken,
         status: userData.status,
-        sickId:userData.sickId,
+        sickId: userData.sickId,
     })
 }
 let handleRegister = async (req, res) => {
@@ -102,7 +113,7 @@ let handleCreateHealth = async (req, res) => {
     return res.status(200).json(message);
 }
 let handleGetHealth = async (req, res) => {
-    let info = await userService.getHealthInfo(req.body.token,req.body.limit);
+    let info = await userService.getHealthInfo(req.body.token, req.body.limit);
     return res.status(200).json({
         errCode: 0,
         info
@@ -153,5 +164,6 @@ module.exports = {
     handleGetExerciseCa,
     handleGetExercise,
     handleGetFoodCa,
-    handleGetFood
+    handleGetFood,
+    handleCreateAbsorb
 }

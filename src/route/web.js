@@ -40,7 +40,7 @@ let initWebRoutes = (app) => {
     //Food
     router.post("/api/user/get-food", userController.handleGetFood)
 
-
+    router.post("/api/user/create-absorb", userController.handleCreateAbsorb)
 
     //Admin Router
     // router.post("/api/admin/login",userController.handleLogin)
@@ -89,10 +89,10 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/create-new-food", multer.single('image'), adminController.handleCreateNewFood)
     router.post("/api/admin/delete-food", adminController.handleDeleteFood)
     router.put("/api/admin/edit-food", multer.single('image'), adminController.handleEditFood)
-    
+    router.post("/api/admin/delete-all-food", adminController.handleDeleteAllFood)
+    router.post("/api/admin/create-excel-food", adminController.handleCreateExcelFood)
 
-
-
+    //Absorb
     return app.use("/", router)
 };
 

@@ -6,13 +6,50 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let createNewAbsorb = (data, token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let vT = await verifyToken(token);
+            let idUser = vT.id;
+            if (data) {
+                await db.Absorb.create({
+                    idUser: Number(idUser),
+                    totalCalo: Number(data.totalCalo),
+                    totalTinhBot: Number(data.totalTinhBot),
+                    totalCho: Number(data.totalCho),
+                    totalFatSat: Number(data.totalFatSat),
+                    totalFatTotal: Number(data.totalFatTotal),
+                    totalChatXo: Number(data.totalChatXo),
+                    totalKali: Number(data.totalKali),
+                    totalPro: Number(data.totalPro),
+                    totalSize: Number(data.totalSize),
+                    totalNatri: Number(data.totalNatri),
+                    totalSugar: Number(data.totalSugar),
+                });
+                resolve({
+                    errCode: 0,
+                    message: "Lưu thành công !",
+                });
+            }
+            else {
+                resolve({
+                    errCode: 1,
+                    message: "Lưu không thành công !",
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let getAllFood = (dataId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = "";
             if (dataId.categoryId) {
                 let categoryId = dataId.categoryId;
-                if (categoryId==="ALL") {
+                if (categoryId === "ALL") {
                     data = await db.Food.findAll({
 
                     });
@@ -25,9 +62,9 @@ let getAllFood = (dataId) => {
                     });
                 }
             }
-            else{
+            else {
                 let sickId = dataId.sickId;
-                if (sickId==="ALL") {
+                if (sickId === "ALL") {
                     data = await db.Food.findAll({
 
                     });
@@ -471,5 +508,6 @@ module.exports = {
     getAllExerciseCa,
     getAllExercise,
     getAllFoodCa,
-    getAllFood
+    getAllFood,
+    createNewAbsorb
 }

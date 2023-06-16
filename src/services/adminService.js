@@ -26,7 +26,6 @@ const buckket = storage.bucket('healthfood-do');
 let createNewFoodCa = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(data);
             if (data) {
                 await db.CategoryFood.create({
                     name: data.name,
@@ -212,7 +211,7 @@ let updateFoodData = (data, req) => {
                 if (!data.id) {
                     resolve({
                         errCode: 1,
-                        message: "Không có id Exercise",
+                        message: "Không có id food",
                         data,
                     });
                 } else {
@@ -251,7 +250,7 @@ let updateFoodData = (data, req) => {
                 if (!data.id) {
                     resolve({
                         errCode: 1,
-                        message: "Không có id bệnh",
+                        message: "Không có id food",
                         data,
                     });
                 } else {
@@ -285,6 +284,50 @@ let updateFoodData = (data, req) => {
                 }
             }
 
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+let deleteAllFood = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data.Delete === 1) {
+                await db.Food.destroy({
+                    where: {},
+                    truncate: true
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "Xóa tât cả thành công",
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+let createExcelFood = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            data.forEach(async (value, index) => {
+                await db.Food.create({
+                    name: value.name,
+                    detail: value.detail,
+                    tag: value.tag,
+                    categoryId: Number(value.categoryId),
+                    sickId: Number(value.sickId),
+                    sickId1: Number(value.sickId1),
+                    sickId2: Number(value.sickId2),
+                    time: Number(value.time),
+                    star: Number(value.star),
+                    calo: Number(value.calo),
+                });
+            })
+            resolve({
+                errCode: 0,
+                message: "Lưu thành công !",
+            });
         } catch (error) {
             reject(error);
         }
@@ -1340,5 +1383,7 @@ module.exports = {
     updateFoodCaData,
     createNewFood,
     deleteOneFood,
-    updateFoodData
+    updateFoodData,
+    deleteAllFood,
+    createExcelFood
 }

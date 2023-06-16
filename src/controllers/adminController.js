@@ -45,6 +45,14 @@ let handleEditFood = async (req, res) => {
     let message = await adminService.updateFoodData(data, req);
     return res.status(200).json(message);
 }
+let handleDeleteAllFood = async (req, res) => {
+    let message = await adminService.deleteAllFood(req.body);
+    return res.status(200).json(message);
+}
+let handleCreateExcelFood = async (req, res) => {
+    let message = await adminService.createExcelFood(req.body);
+    return res.status(200).json(message);
+}
 
 
 
@@ -269,5 +277,7 @@ module.exports = {
     handleEditFoodCa,
     handleCreateNewFood,
     handleDeleteFood,
-    handleEditFood
+    handleEditFood,
+    handleDeleteAllFood,
+    handleCreateExcelFood
 }
