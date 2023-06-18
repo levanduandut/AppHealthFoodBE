@@ -18,6 +18,15 @@ module.exports = {
             categoryId: {
                 type: Sequelize.INTEGER
             },
+            sickId: {
+                type: Sequelize.INTEGER
+            },
+            sickId1: {
+                type: Sequelize.INTEGER
+            },
+            sickId2: {
+                type: Sequelize.INTEGER
+            },
             time: {
                 type: Sequelize.INTEGER
             },

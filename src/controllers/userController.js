@@ -8,6 +8,16 @@ const translate = new Translate({
     credentials: XTRAN,
     projectId: XTRAN.project_id
 });
+
+let handleGetStatus = async (req, res) => {
+    let data = req.body.token;
+    let status = await userService.getStatusUser(data);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        status,
+    });
+};
 let handleCreateAbsorb = async (req, res) => {
     let mes = '';
     console.log(req.body);
@@ -56,7 +66,7 @@ let handleGetExerciseCa = async (req, res) => {
     });
 };
 let handleGetExercise = async (req, res) => {
-    let categoryId = req.body.categoryId;
+    let categoryId = req.body;
     // All, id
     let exercise = await userService.getAllExercise(categoryId);
     return res.status(200).json({
@@ -173,5 +183,6 @@ module.exports = {
     handleGetFoodCa,
     handleGetFood,
     handleCreateAbsorb,
-    handleGetAbsorb
+    handleGetAbsorb,
+    handleGetStatus
 }

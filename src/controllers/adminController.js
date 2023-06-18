@@ -80,6 +80,7 @@ let handleEditExerciseCa = async (req, res) => {
 
 // Exercise
 let handleCreateNewExe = async (req, res) => {
+    console.log(req.body);
     let message = await adminService.createNewExe(req.body, req);
     return res.status(200).json(message);
 }

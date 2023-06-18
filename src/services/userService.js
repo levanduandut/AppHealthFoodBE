@@ -1,11 +1,48 @@
 import { INTEGER, where } from "sequelize";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
+import { Op } from "sequelize";
 import { raw } from "body-parser";
 import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getStatusUser = (token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = verifyToken(token);
+            let sickId = '';
+            let status = '';
+            let errCode = 0;
+            let user = await db.Health.findAll({
+                limit: 1,
+                where: {
+                    userId: data.id,
+                },
+                order: [['createdAt', 'DESC']],
+                raw: true
+            })
+            if (user) {
+                sickId = user[0].sickId;
+            } else {
+                errCode = 1;
+            }
+
+            let userx = await db.User.findOne({ where: { id: data.id }, raw: true });
+            if (userx) {
+                status = userx.status;
+            }
+            resolve({
+                errCode: errCode,
+                sickId: sickId,
+                status: status,
+
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let getAbsorbInfo = (token, x) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -15,7 +52,7 @@ let getAbsorbInfo = (token, x) => {
                     let user = await db.Absorb.findAll({
                         limit: x,
                         where: {
-                            idUser: 2,
+                            idUser: data.id,
                         },
                         order: [['createdAt', 'DESC']]
                     })
@@ -45,7 +82,6 @@ let getAbsorbInfo = (token, x) => {
         }
     });
 };
-
 let createNewAbsorb = (data, token) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -111,7 +147,7 @@ let getAllFood = (dataId) => {
                 if (sickId && sickId !== "ALL") {
                     data = await db.Food.findAll({
                         where: {
-                            sickId: sickId,
+                            [Op.or]: [{ sickId: sickId }, { sickId1: sickId }, { sickId2: sickId }]
                         },
                     });
                 }
@@ -166,21 +202,39 @@ let getAllExerciseCa = (categoryId) => {
         }
     });
 };
-let getAllExercise = (categoryId) => {
+let getAllExercise = (dataId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = "";
-            if (!categoryId) {
-                data = await db.Exercise.findAll({
+            if (dataId.categoryId) {
+                let categoryId = dataId.categoryId;
+                if (categoryId === "ALL") {
+                    data = await db.Exercise.findAll({
 
-                });
+                    });
+                }
+                if (categoryId && categoryId !== "ALL") {
+                    data = await db.Exercise.findAll({
+                        where: {
+                            categoryId: categoryId,
+                        },
+                    });
+                }
             }
-            if (categoryId && categoryId !== "ALL") {
-                data = await db.Exercise.findAll({
-                    where: {
-                        categoryId: categoryId,
-                    },
-                });
+            else {
+                let sickId = dataId.sickId;
+                if (sickId === "ALL") {
+                    data = await db.Exercise.findAll({
+
+                    });
+                }
+                if (sickId && sickId !== "ALL") {
+                    data = await db.Exercise.findAll({
+                        where: {
+                            [Op.or]: [{ sickId: sickId }, { sickId1: sickId }, { sickId2: sickId }]
+                        },
+                    });
+                }
             }
             resolve(data);
         } catch (error) {
@@ -304,6 +358,7 @@ let createNewUser = (data) => {
 let getAllSick = (sickId, info) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(sickId);
             if (info === 0) {
                 let sick = "";
                 if (!sickId) {
@@ -336,6 +391,7 @@ let getAllSick = (sickId, info) => {
                         order: [['id', 'DESC']]
                     });
                 }
+
                 if (sickId && sickId !== "ALL") {
                     sick = await db.Sick.findAll({
                         where: {
@@ -547,5 +603,6 @@ module.exports = {
     getAllFoodCa,
     getAllFood,
     createNewAbsorb,
-    getAbsorbInfo
+    getAbsorbInfo,
+    getStatusUser
 }

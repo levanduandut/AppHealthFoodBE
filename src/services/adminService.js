@@ -442,8 +442,12 @@ let createNewExe = (data, req) => {
                     detail: data.detail,
                     categoryId: data.categoryId,
                     time: data.time,
+                    sickId:data.sickId,
+                    sickId1:data.sickId1,
+                    sickId2:data.sickId2,
                     star: data.star,
                     image: req.file.originalname,
+                    
                 });
                 resolve({
                     errCode: 0,
@@ -454,6 +458,9 @@ let createNewExe = (data, req) => {
                 await db.Exercise.create({
                     name: data.name,
                     detail: data.detail,
+                    sickId:data.sickId,
+                    sickId1:data.sickId1,
+                    sickId2:data.sickId2,
                     categoryId: data.categoryId,
                     time: data.time,
                     star: data.star,
@@ -528,6 +535,9 @@ let updateExeData = (data, req) => {
                             exe.detail = data.detail,
                             exe.categoryId = data.categoryId,
                             exe.time = data.time,
+                            exe.sickId = data.sickId,
+                            exe.sickId1 = data.sickId1,
+                            exe.sickId2 = data.sickId2,
                             exe.star = data.star,
                             exe.image = req.file.originalname,
                             await exe.save();
@@ -589,6 +599,9 @@ let createExcelExe = (data) => {
                     name: value.name,
                     detail: value.detail,
                     categoryId: Number(value.categoryId),
+                    sickId:Number(value.sickId),
+                    sickId1:Number(value.sickId1),
+                    sickId2:Number(value.sickId2),
                     time: Number(value.time),
                     star: Number(value.star),
                 });

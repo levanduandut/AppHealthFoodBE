@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     Exercise.init({
         name: DataTypes.STRING,
         detail: DataTypes.TEXT,
+        sickId: DataTypes.INTEGER,
+        sickId1: DataTypes.INTEGER,
+        sickId2: DataTypes.INTEGER,
         categoryId: DataTypes.INTEGER,
         time: DataTypes.INTEGER,
         star: DataTypes.FLOAT,
