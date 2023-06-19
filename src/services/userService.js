@@ -50,12 +50,12 @@ let getAbsorbInfo = (token, x) => {
             if (data) {
                 if (data.id) {
                     let user = await db.Absorb.findAll({
-                        limit: x,
+                        limit: parseInt(x),
                         where: {
                             idUser: data.id,
                         },
                         order: [['createdAt', 'DESC']]
-                    })
+                    });
                     if (user) {
                         resolve(user);
                     } else {
@@ -63,22 +63,20 @@ let getAbsorbInfo = (token, x) => {
                             errCode: 1,
                         });
                     }
-                }
-                else {
+                } else {
                     resolve({
                         errCode: 2,
                     });
                 }
-            }
-            else {
+            } else {
                 resolve({
                     errCode: 3,
                 });
             }
-
-
         } catch (error) {
-            reject(error);
+            // Xử lý hoặc bỏ qua lỗi tùy vào ngữ cảnh
+            console.error('Lỗi khi lấy thông tin absorb:', error);
+            reject(error); // Hoặc resolve với giá trị mặc định khác tùy vào ngữ cảnh
         }
     });
 };

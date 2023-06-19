@@ -12,6 +12,11 @@ import connectDB from "./config/connectDB";
 // })
 // gc.getBuckets().then(x => console.log(x));
 // const fileBuckket = gc.bucket('healthfood-do');
+process.on('unhandledRejection', (err) => {
+    console.error('Unhandled Promise Rejection:', err);
+    // Xử lý lỗi ở đây
+    // Ví dụ: ghi log, thông báo, hoặc thực hiện các tác vụ khác
+});
 
 // import cors from "cors"
 require("dotenv").config();
