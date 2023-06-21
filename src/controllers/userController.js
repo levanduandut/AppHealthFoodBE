@@ -9,6 +9,17 @@ const translate = new Translate({
     projectId: XTRAN.project_id
 });
 
+
+let handleSickIngredient = async (req, res) => {
+    let id = req.body.id; // All, id
+    let ingre = await userService.getSickIngredient(id);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: "OK",
+        ingre,
+    });
+}
+
 let handleGetStatus = async (req, res) => {
     let data = req.body.token;
     let status = await userService.getStatusUser(data);
@@ -22,7 +33,7 @@ let handleCreateAbsorb = async (req, res) => {
     let mes = '';
     console.log(req.body);
     if (req.body) {
-        mes = await userService.createNewAbsorb(req.body.data, req.body.token);
+        mes = await userService.createNewAbsorb(req.body.data, req.body.token,req.body.eat);
     }
     else {
         mes = "Fail";
@@ -184,5 +195,6 @@ module.exports = {
     handleGetFood,
     handleCreateAbsorb,
     handleGetAbsorb,
-    handleGetStatus
+    handleGetStatus,
+    handleSickIngredient
 }

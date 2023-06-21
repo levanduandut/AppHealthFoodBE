@@ -442,12 +442,12 @@ let createNewExe = (data, req) => {
                     detail: data.detail,
                     categoryId: data.categoryId,
                     time: data.time,
-                    sickId:data.sickId,
-                    sickId1:data.sickId1,
-                    sickId2:data.sickId2,
+                    sickId: data.sickId,
+                    sickId1: data.sickId1,
+                    sickId2: data.sickId2,
                     star: data.star,
                     image: req.file.originalname,
-                    
+
                 });
                 resolve({
                     errCode: 0,
@@ -458,9 +458,9 @@ let createNewExe = (data, req) => {
                 await db.Exercise.create({
                     name: data.name,
                     detail: data.detail,
-                    sickId:data.sickId,
-                    sickId1:data.sickId1,
-                    sickId2:data.sickId2,
+                    sickId: data.sickId,
+                    sickId1: data.sickId1,
+                    sickId2: data.sickId2,
                     categoryId: data.categoryId,
                     time: data.time,
                     star: data.star,
@@ -599,9 +599,9 @@ let createExcelExe = (data) => {
                     name: value.name,
                     detail: value.detail,
                     categoryId: Number(value.categoryId),
-                    sickId:Number(value.sickId),
-                    sickId1:Number(value.sickId1),
-                    sickId2:Number(value.sickId2),
+                    sickId: Number(value.sickId),
+                    sickId1: Number(value.sickId1),
+                    sickId2: Number(value.sickId2),
                     time: Number(value.time),
                     star: Number(value.star),
                 });
@@ -655,6 +655,7 @@ let createNewSick = (data, urlImage, req) => {
                 name: data.name,
                 tag: data.tag,
                 detail: data.detail,
+                arring: data.arring,
                 image: req.file.originalname,
             });
             resolve({
@@ -674,6 +675,8 @@ let createExcelSick = (data) => {
                     name: value.name,
                     tag: value.tag,
                     detail: value.detail,
+                    image: value.image,
+                    arring: value.arring,
                 });
             })
             resolve({
@@ -740,6 +743,7 @@ let updateSickData = (data, req) => {
                     if (sick) {
                         sick.name = data.name,
                             sick.tag = data.tag,
+                            sick.arring = data.arring,
                             sick.detail = data.detail,
                             sick.image = req.file.originalname,
                             await sick.save();
@@ -770,6 +774,7 @@ let updateSickData = (data, req) => {
                     });
                     if (sick) {
                         sick.name = data.name,
+                            sick.arring = data.arring,
                             sick.tag = data.tag,
                             sick.detail = data.detail,
                             await sick.save();

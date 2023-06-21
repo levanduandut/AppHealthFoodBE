@@ -12,6 +12,9 @@ module.exports = {
             idUser: {
                 type: Sequelize.INTEGER
             },
+            eat: {
+                type: Sequelize.TEXT
+            },
             totalCalo: {
                 type: Sequelize.FLOAT
             },

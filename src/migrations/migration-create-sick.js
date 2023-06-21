@@ -15,6 +15,9 @@ module.exports = {
             tag: {
                 type: Sequelize.STRING
             },
+            arring: {
+                type: Sequelize.STRING
+            },
             detail: {
                 type: Sequelize.TEXT
             },

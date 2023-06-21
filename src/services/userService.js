@@ -7,6 +7,71 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getSickIngredient = (sickId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            let datax = "";
+            let datay = "";
+            let data = "";
+            let arr = "";
+            if (sickId && sickId !== "ALL") {
+                arr = await db.Sick.findOne({
+                    where: {
+                        id: sickId,
+                    },
+                    attributes: ['arring'],
+                    raw: true
+                });
+            }
+            let ingredient = await db.Ingredient; // Lấy model "Ingredient" từ models/index.js
+            let fields = Object.keys(ingredient.rawAttributes); // Lấy các trường của model "Ingredient"
+            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category'];
+            let filteredFields = fields.filter(field => !unwantedFields.includes(field));
+            if (arr.arring !== null) {
+                let numbersString = arr.arring;
+                let numbersArray = numbersString.split(",").map(Number);
+                let positiveNumbers = [];
+                let negativeNumbers = [];
+                for (let i = 0; i < numbersArray.length; i++) {
+                    let number = numbersArray[i];
+                    if (number > 0) {
+                        positiveNumbers.push(number);
+                        console.log(filteredFields[number]);
+                    } else if (number < 0) {
+                        negativeNumbers.push(number);
+                    }
+                }
+                let orderCriteriax = positiveNumbers.map((number) => [filteredFields[number], 'DESC']);
+                if (positiveNumbers) {
+                    datax = await db.Ingredient.findAll({
+                        limit: 2,
+                        where: {},
+                        raw: true,
+                        order: orderCriteriax,
+                    });
+                }
+                let orderCriteriay = positiveNumbers.map((number) => [filteredFields[number], 'ASC']);
+                if (negativeNumbers) {
+                    datay = await db.Ingredient.findAll({
+                        limit: 2,
+                        where: {},
+                        raw: true,
+                        order: orderCriteriay,
+                    });
+                }
+                data = {
+                    nen: datax,
+                    konen: datay
+                };
+            }
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 let getStatusUser = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -80,7 +145,7 @@ let getAbsorbInfo = (token, x) => {
         }
     });
 };
-let createNewAbsorb = (data, token) => {
+let createNewAbsorb = (data, token, eat) => {
     return new Promise(async (resolve, reject) => {
         try {
             let vT = await verifyToken(token);
@@ -88,6 +153,7 @@ let createNewAbsorb = (data, token) => {
             if (data) {
                 await db.Absorb.create({
                     idUser: Number(idUser),
+                    eat: eat,
                     totalCalo: Number(data.totalCalo),
                     totalTinhBot: Number(data.totalTinhBot),
                     totalCho: Number(data.totalCho),
@@ -356,7 +422,6 @@ let createNewUser = (data) => {
 let getAllSick = (sickId, info) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(sickId);
             if (info === 0) {
                 let sick = "";
                 if (!sickId) {
@@ -602,5 +667,6 @@ module.exports = {
     getAllFood,
     createNewAbsorb,
     getAbsorbInfo,
-    getStatusUser
+    getStatusUser,
+    getSickIngredient
 }

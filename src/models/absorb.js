@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Absorb.init({
         idUser:DataTypes.INTEGER,
+        eat: DataTypes.TEXT,
         totalCalo: DataTypes.FLOAT,
         totalTinhBot: DataTypes.FLOAT,
         totalCho: DataTypes.FLOAT,
