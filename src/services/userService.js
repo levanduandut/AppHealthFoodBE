@@ -7,13 +7,50 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getCaloById = (token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = verifyToken(token);
+            let calo = '';
+            if (data.id) {
+                let user = await db.User.findOne({ where: { id: data.id }, raw: true });
+                let health = await db.Health.findAll({
+                    limit: 1,
+                    where: {
+                        userId: data.id,
+                    },
+                    order: [['createdAt', 'DESC']]
+                })
+                if (user != null && health.length === 1) {
+                    if (user.gender == 2) {
+                        calo = 66 + (13.7 * (health[0].weight)) + (5 * (health[0].height)) - (6.8 * (user.age));
+                    }
+                    else {
+                        calo = 665 + (9.6 * (health[0].weight)) + (1.8 * (health[0].height)) - (4.7 * (user.age));
+                    }
+                    resolve(calo);
+                } else {
+                    resolve({
+                        errCode: 1
+                    });
+                }
+            }
+            else {
+                resolve(calo);
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 let getFieldIngredient = () => {
     return new Promise(async (resolve, reject) => {
         try {
 
             let ingredient = await db.Ingredient; // Lấy model "Ingredient" từ models/index.js
             let fields = Object.keys(ingredient.rawAttributes); // Lấy các trường của model "Ingredient"
-            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category','name','unit'];
+            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category', 'name', 'unit'];
             let filteredFields = fields.filter(field => !unwantedFields.includes(field));
             resolve(filteredFields);
         } catch (error) {
@@ -24,7 +61,6 @@ let getFieldIngredient = () => {
 let getSickIngredient = (sickId) => {
     return new Promise(async (resolve, reject) => {
         try {
-
             let datax = "";
             let datay = "";
             let data = "";
@@ -40,7 +76,7 @@ let getSickIngredient = (sickId) => {
             }
             let ingredient = await db.Ingredient; // Lấy model "Ingredient" từ models/index.js
             let fields = Object.keys(ingredient.rawAttributes); // Lấy các trường của model "Ingredient"
-            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category','name','unit'];
+            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category', 'name', 'unit'];
             let filteredFields = fields.filter(field => !unwantedFields.includes(field));
             if (arr.arring !== null) {
                 let numbersString = arr.arring;
@@ -51,32 +87,36 @@ let getSickIngredient = (sickId) => {
                     let number = numbersArray[i];
                     if (number > 0) {
                         positiveNumbers.push(number);
-                        console.log(filteredFields[number]);
                     } else if (number < 0) {
                         negativeNumbers.push(number);
                     }
                 }
-                let orderCriteriax = positiveNumbers.map((number) => [filteredFields[number], 'DESC']);
+                let orderCriteriaX = positiveNumbers.map((number) => [filteredFields[number], 'DESC']);
                 if (positiveNumbers) {
                     datax = await db.Ingredient.findAll({
-                        limit: 2,
+                        limit: 40,
                         where: {},
                         raw: true,
-                        order: orderCriteriax,
+                        order: orderCriteriaX,
                     });
                 }
-                let orderCriteriay = positiveNumbers.map((number) => [filteredFields[number], 'ASC']);
+                let result = [];
+                for (let i = 0; i < negativeNumbers.length; i++) {
+                    let soDuong = Math.abs(negativeNumbers[i]); // Lấy giá trị tuyệt đối của phần tử
+                    result.push(soDuong);
+                }
+                let orderCriteriaY = result.map((number) => [filteredFields[number], 'DESC']);
                 if (negativeNumbers) {
                     datay = await db.Ingredient.findAll({
-                        limit: 2,
+                        limit: 10,
                         where: {},
                         raw: true,
-                        order: orderCriteriay,
+                        order: orderCriteriaY,
                     });
                 }
                 data = {
-                    nen: datax,
-                    konen: datay
+                    should: datax,
+                    shouldnot: datay
                 };
             }
             resolve(data);
@@ -461,14 +501,12 @@ let getAllSick = (sickId, info) => {
                 resolve(newArrayOfObj);
             }
             else if (info === 1) {
-                console.log("hehe");
                 let sick = "";
                 if (!sickId) {
                     sick = await db.Sick.findAll({
                         order: [['id', 'DESC']]
                     });
                 }
-
                 if (sickId && sickId !== "ALL") {
                     sick = await db.Sick.findAll({
                         where: {
@@ -683,5 +721,6 @@ module.exports = {
     getAbsorbInfo,
     getStatusUser,
     getSickIngredient,
-    getFieldIngredient
+    getFieldIngredient,
+    getCaloById
 }
