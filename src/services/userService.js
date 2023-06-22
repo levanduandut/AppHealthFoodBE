@@ -7,6 +7,20 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+let getFieldIngredient = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            let ingredient = await db.Ingredient; // Lấy model "Ingredient" từ models/index.js
+            let fields = Object.keys(ingredient.rawAttributes); // Lấy các trường của model "Ingredient"
+            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category','name','unit'];
+            let filteredFields = fields.filter(field => !unwantedFields.includes(field));
+            resolve(filteredFields);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let getSickIngredient = (sickId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -26,7 +40,7 @@ let getSickIngredient = (sickId) => {
             }
             let ingredient = await db.Ingredient; // Lấy model "Ingredient" từ models/index.js
             let fields = Object.keys(ingredient.rawAttributes); // Lấy các trường của model "Ingredient"
-            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category'];
+            let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category','name','unit'];
             let filteredFields = fields.filter(field => !unwantedFields.includes(field));
             if (arr.arring !== null) {
                 let numbersString = arr.arring;
@@ -668,5 +682,6 @@ module.exports = {
     createNewAbsorb,
     getAbsorbInfo,
     getStatusUser,
-    getSickIngredient
+    getSickIngredient,
+    getFieldIngredient
 }
