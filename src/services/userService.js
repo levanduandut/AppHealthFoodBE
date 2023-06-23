@@ -7,6 +7,47 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 
+
+let updateUserInfo = (data, token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let id = verifyToken(token).id;
+            if (!id) {
+                resolve({
+                    errCode: 1,
+                    message: "Không có id User",
+                    data,
+                });
+            } else {
+                let user = await db.User.findOne({
+                    where: {
+                        id: id,
+                    },
+                });
+                if (user) {
+                    user.fullName = data.name;
+                    user.gender = data.gender;
+                    user.age = data.age;
+                    await user.save();
+                    resolve({
+                        errCode: 0,
+                        message: "Đã sửa",
+                        data,
+                    });
+                } else {
+                    resolve({
+                        errCode: 2,
+                        message: "Không sửa được",
+                    });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+
 let getCaloById = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -141,7 +182,7 @@ let getStatusUser = (token) => {
                 order: [['createdAt', 'DESC']],
                 raw: true
             })
-            if (user) {
+            if (user.length > 0) {
                 sickId = user[0].sickId;
             } else {
                 errCode = 1;
@@ -722,5 +763,6 @@ module.exports = {
     getStatusUser,
     getSickIngredient,
     getFieldIngredient,
-    getCaloById
+    getCaloById,
+    updateUserInfo
 }

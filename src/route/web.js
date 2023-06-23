@@ -29,10 +29,12 @@ let initWebRoutes = (app) => {
     router.post("/api/user/get-ingredient-bysick", userController.handleSickIngredient)
     router.get("/api/user/get-field", userController.handleGetField)
     router.post("/api/user/get-calo", userController.handleGetCalo)
+    router.post("/api/user/edit-info", userController.handleEditInfo)
 
     // User Health 
     router.post("/api/user/health-create", userController.handleCreateHealth)
     router.post("/api/user/health-info", userController.handleGetHealth)
+    
 
     //User Exercise
     router.post("/api/user/get-exercise-category", userController.handleGetExerciseCa)
