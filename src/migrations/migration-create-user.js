@@ -30,12 +30,6 @@ module.exports = {
       age: {
         type: Sequelize.INTEGER
       },
-      address: {
-        type: Sequelize.STRING
-      },
-      sickId: {
-        type: Sequelize.INTEGER
-      },
       status: {
         type: Sequelize.INTEGER,
         defaultValue: 0

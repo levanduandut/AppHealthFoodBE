@@ -1,4 +1,4 @@
-import { INTEGER, where } from "sequelize";
+import { INTEGER, where, fn } from "sequelize";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
@@ -132,13 +132,13 @@ let getSickIngredient = (sickId) => {
                         negativeNumbers.push(number);
                     }
                 }
-                let orderCriteriaX = positiveNumbers.map((number) => [filteredFields[number], 'DESC']);
+                let sumExpressionX = positiveNumbers.map(num => filteredFields[num]).join(' + ');
                 if (positiveNumbers) {
                     datax = await db.Ingredient.findAll({
-                        limit: 40,
+                        limit: 30,
                         where: {},
                         raw: true,
-                        order: orderCriteriaX,
+                        order: [[db.sequelize.literal(`(${sumExpressionX}) DESC`)]]
                     });
                 }
                 let result = [];
@@ -146,13 +146,13 @@ let getSickIngredient = (sickId) => {
                     let soDuong = Math.abs(negativeNumbers[i]); // Lấy giá trị tuyệt đối của phần tử
                     result.push(soDuong);
                 }
-                let orderCriteriaY = result.map((number) => [filteredFields[number], 'DESC']);
+                let sumExpressionY = result.map(num => filteredFields[num]).join(' + ');
                 if (negativeNumbers) {
                     datay = await db.Ingredient.findAll({
-                        limit: 10,
+                        limit: 7,
                         where: {},
                         raw: true,
-                        order: orderCriteriaY,
+                        order: [[db.sequelize.literal(`(${sumExpressionY}) DESC`)]]
                     });
                 }
                 data = {
@@ -214,7 +214,7 @@ let getAbsorbInfo = (token, x) => {
                         where: {
                             idUser: data.id,
                         },
-                        order: [['createdAt', 'DESC']]
+                        order: [['createdAt', 'ASC']]
                     });
                     if (user) {
                         resolve(user);

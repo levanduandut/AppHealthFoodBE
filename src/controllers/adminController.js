@@ -101,7 +101,6 @@ let handleEditExe = async (req, res) => {
     return res.status(200).json(message);
 }
 let handleCreateExcelExe = async (req, res) => {
-    console.log(req);
     let message = await adminService.createExcelExe(req.body);
     return res.status(200).json(message);
 }

@@ -315,6 +315,7 @@ let createExcelFood = (data) => {
                     name: value.name,
                     detail: value.detail,
                     tag: value.tag,
+                    image:value.image,
                     categoryId: Number(value.categoryId),
                     sickId: Number(value.sickId),
                     sickId1: Number(value.sickId1),
@@ -594,10 +595,11 @@ let updateExeData = (data, req) => {
 let createExcelExe = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            data.forEach(async (value, index) => {
+            for (const value of data) {
                 await db.Exercise.create({
                     name: value.name,
                     detail: value.detail,
+                    image:value.image,
                     categoryId: Number(value.categoryId),
                     sickId: Number(value.sickId),
                     sickId1: Number(value.sickId1),
@@ -605,7 +607,7 @@ let createExcelExe = (data) => {
                     time: Number(value.time),
                     star: Number(value.star),
                 });
-            })
+            }
             resolve({
                 errCode: 0,
                 message: "Lưu thành công !",
@@ -637,7 +639,7 @@ let deleteAllExe = (data) => {
 
 
 //Sick
-let createNewSick = (data, urlImage, req) => {
+let createNewSick = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             try {
@@ -670,15 +672,15 @@ let createNewSick = (data, urlImage, req) => {
 let createExcelSick = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            data.forEach(async (value, index) => {
+            for (const value of data) {
                 await db.Sick.create({
                     name: value.name,
                     tag: value.tag,
                     detail: value.detail,
                     image: value.image,
                     arring: value.arring,
-                });
-            })
+                })
+            };
             resolve({
                 errCode: 0,
                 message: "Lưu thành công !",
@@ -849,6 +851,7 @@ let createExcelBlog = (data) => {
                     title: value.title,
                     categoryId: Number(value.categoryId),
                     tag: value.tag,
+                    image: value.image,
                     star: Number(value.star),
                     detail: value.detail,
                 });
@@ -862,7 +865,7 @@ let createExcelBlog = (data) => {
         }
     });
 };
-let createNewBlog = (data, urlImage, req) => {
+let createNewBlog = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             try {
@@ -894,7 +897,7 @@ let createNewBlog = (data, urlImage, req) => {
         }
     });
 };
-let updateBlogData = (data, urlImage, req) => {
+let updateBlogData = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (req.file) {
