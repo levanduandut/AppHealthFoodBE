@@ -2,11 +2,46 @@ import { INTEGER, where, fn } from "sequelize";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
-import { raw } from "body-parser";
+import { raw, urlencoded } from "body-parser";
 import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
+import axios from "axios";
+const encodedParams = new URLSearchParams();
+encodedParams.set('to_lang', 'en');
+encodedParams.set('from_lang', 'vi');
 
+
+
+let translateLang = async (text, lang) => {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            encodedParams.set('text', text);
+            const options = {
+                method: 'POST',
+                url: `${process.env.URLTRANSLATE}`,
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'X-RapidAPI-Key': `${process.env.KEY_TRANS}`,
+                    'X-RapidAPI-Host': `${process.env.HOST_TRANS}`
+                },
+                data: encodedParams,
+            };
+            try {
+                const response = await axios.request(options);
+                let x = response.data.translated_text;
+                resolve(x);
+            } catch (error) {
+                resolve({
+                    errCode : 1
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
 let updateUserInfo = (data, token) => {
     return new Promise(async (resolve, reject) => {
@@ -46,8 +81,6 @@ let updateUserInfo = (data, token) => {
         }
     });
 };
-
-
 let getCaloById = (token) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -135,7 +168,7 @@ let getSickIngredient = (sickId) => {
                 let sumExpressionX = positiveNumbers.map(num => filteredFields[num]).join(' + ');
                 if (positiveNumbers) {
                     datax = await db.Ingredient.findAll({
-                        limit: 30,
+                        limit: 10,
                         where: {},
                         raw: true,
                         order: [[db.sequelize.literal(`(${sumExpressionX}) DESC`)]]
@@ -146,14 +179,19 @@ let getSickIngredient = (sickId) => {
                     let soDuong = Math.abs(negativeNumbers[i]); // Lấy giá trị tuyệt đối của phần tử
                     result.push(soDuong);
                 }
-                let sumExpressionY = result.map(num => filteredFields[num]).join(' + ');
-                if (negativeNumbers) {
-                    datay = await db.Ingredient.findAll({
-                        limit: 7,
-                        where: {},
-                        raw: true,
-                        order: [[db.sequelize.literal(`(${sumExpressionY}) DESC`)]]
-                    });
+                let datay;
+                if (result === null) {
+                    datay = null;
+                } else {
+                    let sumExpressionY = result.map(num => filteredFields[num]).join(' + ');
+                    if (negativeNumbers) {
+                        datay = await db.Ingredient.findAll({
+                            limit: 7,
+                            where: {},
+                            raw: true,
+                            order: [[db.sequelize.literal(`(${sumExpressionY}) DESC`)]]
+                        });
+                    }
                 }
                 data = {
                     should: datax,
@@ -632,7 +670,7 @@ let handleUserLogin = (email, password) => {
             if (isExist) {
                 // coparepass
                 let user = await db.User.findOne({
-                    attributes: ["id", "status", "email", "password", "sickId", "roleID", "jwtToken"],
+                    attributes: ["id", "status", "email", "password", "roleID", "jwtToken"],
                     where: {
                         email: email,
                     },
@@ -764,5 +802,6 @@ module.exports = {
     getSickIngredient,
     getFieldIngredient,
     getCaloById,
+    translateLang,
     updateUserInfo
 }

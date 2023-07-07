@@ -3,6 +3,7 @@ import homeController from "../controllers/homeController";
 import userController from "../controllers/userController";
 import adminController from "../controllers/adminController";
 const Multer = require('multer')
+import uploadCloud from "../config/cloudinary";
 const multer = Multer({
     storage: Multer.memoryStorage(),
     limits: {
@@ -34,12 +35,12 @@ let initWebRoutes = (app) => {
     // User Health 
     router.post("/api/user/health-create", userController.handleCreateHealth)
     router.post("/api/user/health-info", userController.handleGetHealth)
-    
+
 
     //User Exercise
     router.post("/api/user/get-exercise-category", userController.handleGetExerciseCa)
     router.post("/api/user/get-exercise", userController.handleGetExercise)
-    
+
 
     //User Food Ca
     router.post("/api/user/get-food-category", userController.handleGetFoodCa)
@@ -67,16 +68,16 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-ingredient", adminController.handleDeleteOneIngredient)
     router.put("/api/admin/edit-ingredient", adminController.handleEditIngredient)
     //// Admin Blog
-    router.post("/api/admin/create-new-blog", multer.single('image'), adminController.handleCreateNewBlog)
+    router.post("/api/admin/create-new-blog", uploadCloud.single('image'), adminController.handleCreateNewBlog)
     router.post("/api/admin/create-excel-blog", adminController.handleCreateExcelBlog)
     router.post("/api/admin/delete-all-blog", adminController.handleDeleteAllBlog)
     router.post("/api/admin/delete-blog", adminController.handleDeleteOneBlog)
-    router.put("/api/admin/edit-blog", multer.single('image'), adminController.handleEditBlog)
+    router.put("/api/admin/edit-blog", uploadCloud.single('image'), adminController.handleEditBlog)
 
     //// Admin Sick
-    router.post("/api/admin/create-new-sick", multer.single('image'), adminController.handleCreateNewSick)
+    router.post("/api/admin/create-new-sick", uploadCloud.single('image'), adminController.handleCreateNewSick)
     router.post("/api/admin/create-excel-sick", adminController.handleCreateExcelSick)
-    router.put("/api/admin/edit-sick", multer.single('image'), adminController.handleEditSick)
+    router.put("/api/admin/edit-sick", uploadCloud.single('image'), adminController.handleEditSick)
     router.post("/api/admin/delete-sick", adminController.handleDeleteOneSick)
     router.post("/api/admin/delete-all-sick", adminController.handleDeleteAllSick)
 
@@ -85,9 +86,9 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-exercise-category", adminController.handleDeleteExerciseCa)
     router.put("/api/admin/edit-exercise-category", adminController.handleEditExerciseCa)
 
-    router.post("/api/admin/create-new-exercise", multer.single('image'), adminController.handleCreateNewExe)
+    router.post("/api/admin/create-new-exercise", uploadCloud.single('image'), adminController.handleCreateNewExe)
     router.post("/api/admin/delete-exercise", adminController.handleDeleteExe)
-    router.put("/api/admin/edit-exercise", multer.single('image'), adminController.handleEditExe)
+    router.put("/api/admin/edit-exercise", uploadCloud.single('image'), adminController.handleEditExe)
     router.post("/api/admin/create-excel-exercise", adminController.handleCreateExcelExe)
     router.post("/api/admin/delete-all-exercise", adminController.handleDeleteAllExe)
 
@@ -96,9 +97,10 @@ let initWebRoutes = (app) => {
     router.post("/api/admin/delete-food-category", adminController.handleDeleteFoodCa)
     router.put("/api/admin/edit-food-category", adminController.handleEditFoodCa)
 
-    router.post("/api/admin/create-new-food", multer.single('image'), adminController.handleCreateNewFood)
+    // router.post("/api/admin/create-new-food", multer.single('image'), adminController.handleCreateNewFood)
+    router.post("/api/admin/create-new-food", uploadCloud.single('image'), adminController.handleCreateNewFood)
     router.post("/api/admin/delete-food", adminController.handleDeleteFood)
-    router.put("/api/admin/edit-food", multer.single('image'), adminController.handleEditFood)
+    router.put("/api/admin/edit-food", uploadCloud.single('image'), adminController.handleEditFood)
     router.post("/api/admin/delete-all-food", adminController.handleDeleteAllFood)
     router.post("/api/admin/create-excel-food", adminController.handleCreateExcelFood)
 

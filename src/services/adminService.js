@@ -8,19 +8,20 @@ require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 const Multer = require("multer");
 
-const { Storage } = require('@google-cloud/storage');
+
+// const { Storage } = require('@google-cloud/storage');
 const path = require("path");
-const multerx = Multer({
-    storage: Multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024, // No larger than 5mb, change as you need
-    },
-});
-const storage = new Storage({
-    keyFilename: path.join(__dirname, "../fiery-atlas-388115-cbec4b777bcb.json"),
-    projectId: 'fiery-atlas-388115',
-})
-const buckket = storage.bucket('healthfood-do');
+// const multerx = Multer({
+//     storage: Multer.memoryStorage(),
+//     limits: {
+//         fileSize: 5 * 1024 * 1024, // No larger than 5mb, change as you need
+//     },
+// });
+// const storage = new Storage({
+//     keyFilename: path.join(__dirname, "../fiery-atlas-388115-cbec4b777bcb.json"),
+//     projectId: 'fiery-atlas-388115',
+// })
+// const buckket = storage.bucket('healthfood-do');
 
 //FoodCa
 let createNewFoodCa = (data) => {
@@ -108,22 +109,70 @@ let updateFoodCaData = (data) => {
 };
 
 //Food
+// let createNewFood = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             console.log(data);
+//             if (req.file) {
+//                 try {
+//                     if (req.file) {
+//                         const blob = buckket.file(req.file.originalname);
+//                         const blobStream = blob.createWriteStream();
+//                         await blobStream.on('finish', () => {
+//                         })
+//                         blobStream.end(req.file.buffer);
+//                     }
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//                 await db.Food.create({
+//                     name: data.name,
+//                     detail: data.detail,
+//                     tag: data.tag,
+//                     categoryId: data.categoryId,
+//                     sickId: data.sickId,
+//                     sickId1: data.sickId1,
+//                     sickId2: data.sickId2,
+//                     time: data.time,
+//                     star: data.star,
+//                     calo: data.calo,
+//                     image: req.file.originalname,
+//                 });
+//                 resolve({
+//                     errCode: 0,
+//                     message: "Lưu thành công !",
+//                 });
+//             }
+//             else {
+//                 await db.Food.create({
+//                     name: data.name,
+//                     detail: data.detail,
+//                     tag: data.tag,
+//                     categoryId: data.categoryId,
+//                     sickId: data.sickId,
+//                     sickId1: data.sickId1,
+//                     sickId2: data.sickId2,
+//                     time: data.time,
+//                     star: data.star,
+//                     calo: data.calo,
+//                 });
+//                 resolve({
+//                     errCode: 0,
+//                     message: "Lưu thành công !",
+//                 });
+//             }
+//         } catch (error) {
+//             reject({
+//                 errCode: 3,
+//                 message: "Error !",
+//             });
+//         }
+//     });
+// };
 let createNewFood = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(data);
             if (req.file) {
-                try {
-                    if (req.file) {
-                        const blob = buckket.file(req.file.originalname);
-                        const blobStream = blob.createWriteStream();
-                        await blobStream.on('finish', () => {
-                        })
-                        blobStream.end(req.file.buffer);
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
                 await db.Food.create({
                     name: data.name,
                     detail: data.detail,
@@ -135,8 +184,9 @@ let createNewFood = (data, req) => {
                     time: data.time,
                     star: data.star,
                     calo: data.calo,
-                    image: req.file.originalname,
+                    image: req.file.path,
                 });
+                console.log(req.file);
                 resolve({
                     errCode: 0,
                     message: "Lưu thành công !",
@@ -168,6 +218,7 @@ let createNewFood = (data, req) => {
         }
     });
 };
+
 let deleteOneFood = (idFood) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -192,22 +243,107 @@ let deleteOneFood = (idFood) => {
         }
     });
 };
+// let updateFoodData = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             if (req.file) {
+//                 try {
+//                     if (req.file) {
+//                         console.log(req.file)
+//                         const blob = buckket.file(req.file.originalname);
+//                         const blobStream = blob.createWriteStream();
+//                         await blobStream.on('finish', () => {
+//                         })
+//                         blobStream.end(req.file.buffer);
+//                     }
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id food",
+//                         data,
+//                     });
+//                 } else {
+//                     let food = await db.Food.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (food) {
+
+//                         food.name = data.name,
+//                             food.detail = data.detail,
+//                             food.tag = data.tag,
+//                             food.categoryId = data.categoryId,
+//                             food.sickId = data.sickId,
+//                             food.sickId1 = data.sickId1,
+//                             food.sickId2 = data.sickId2,
+//                             food.time = data.time,
+//                             food.star = data.star,
+//                             food.calo = data.calo,
+//                             food.image = req.file.originalname,
+//                             await food.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+//             else {
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id food",
+//                         data,
+//                     });
+//                 } else {
+//                     let food = await db.Food.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (food) {
+//                         food.name = data.name,
+//                             food.detail = data.detail,
+//                             food.tag = data.tag,
+//                             food.categoryId = data.categoryId,
+//                             food.sickId = data.sickId,
+//                             food.sickId1 = data.sickId1,
+//                             food.sickId2 = data.sickId2,
+//                             food.time = data.time,
+//                             food.star = data.star,
+//                             food.calo = data.calo,
+//                             await food.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
+// };
 let updateFoodData = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (req.file) {
-                try {
-                    if (req.file) {
-                        console.log(req.file)
-                        const blob = buckket.file(req.file.originalname);
-                        const blobStream = blob.createWriteStream();
-                        await blobStream.on('finish', () => {
-                        })
-                        blobStream.end(req.file.buffer);
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
                 if (!data.id) {
                     resolve({
                         errCode: 1,
@@ -221,7 +357,6 @@ let updateFoodData = (data, req) => {
                         },
                     });
                     if (food) {
-
                         food.name = data.name,
                             food.detail = data.detail,
                             food.tag = data.tag,
@@ -232,7 +367,7 @@ let updateFoodData = (data, req) => {
                             food.time = data.time,
                             food.star = data.star,
                             food.calo = data.calo,
-                            food.image = req.file.originalname,
+                            food.image = req.file.path,
                             await food.save();
                         resolve({
                             errCode: 0,
@@ -315,7 +450,7 @@ let createExcelFood = (data) => {
                     name: value.name,
                     detail: value.detail,
                     tag: value.tag,
-                    image:value.image,
+                    image: value.image,
                     categoryId: Number(value.categoryId),
                     sickId: Number(value.sickId),
                     sickId1: Number(value.sickId1),
@@ -423,21 +558,66 @@ let updateExeCaData = (data) => {
 };
 
 // Exe
+// let createNewExe = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             if (req.file) {
+//                 try {
+//                     if (req.file) {
+//                         const blob = buckket.file(req.file.originalname);
+//                         const blobStream = blob.createWriteStream();
+//                         await blobStream.on('finish', () => {
+//                         })
+//                         blobStream.end(req.file.buffer);
+//                     }
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//                 await db.Exercise.create({
+//                     name: data.name,
+//                     detail: data.detail,
+//                     categoryId: data.categoryId,
+//                     time: data.time,
+//                     sickId: data.sickId,
+//                     sickId1: data.sickId1,
+//                     sickId2: data.sickId2,
+//                     star: data.star,
+//                     image: req.file.originalname,
+
+//                 });
+//                 resolve({
+//                     errCode: 0,
+//                     message: "Lưu thành công !",
+//                 });
+//             }
+//             else {
+//                 await db.Exercise.create({
+//                     name: data.name,
+//                     detail: data.detail,
+//                     sickId: data.sickId,
+//                     sickId1: data.sickId1,
+//                     sickId2: data.sickId2,
+//                     categoryId: data.categoryId,
+//                     time: data.time,
+//                     star: data.star,
+//                 });
+//                 resolve({
+//                     errCode: 0,
+//                     message: "Lưu thành công !",
+//                 });
+//             }
+//         } catch (error) {
+//             reject({
+//                 errCode: 3,
+//                 message: "Error !",
+//             });
+//         }
+//     });
+// };
 let createNewExe = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (req.file) {
-                try {
-                    if (req.file) {
-                        const blob = buckket.file(req.file.originalname);
-                        const blobStream = blob.createWriteStream();
-                        await blobStream.on('finish', () => {
-                        })
-                        blobStream.end(req.file.buffer);
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
                 await db.Exercise.create({
                     name: data.name,
                     detail: data.detail,
@@ -447,7 +627,7 @@ let createNewExe = (data, req) => {
                     sickId1: data.sickId1,
                     sickId2: data.sickId2,
                     star: data.star,
-                    image: req.file.originalname,
+                    image: req.file.path,
 
                 });
                 resolve({
@@ -503,22 +683,99 @@ let deleteOneExercise = (idExe) => {
         }
     });
 };
+// let updateExeData = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             if (req.file) {
+//                 try {
+//                     if (req.file) {
+//                         console.log(req.file)
+//                         const blob = buckket.file(req.file.originalname);
+//                         const blobStream = blob.createWriteStream();
+//                         await blobStream.on('finish', () => {
+//                         })
+//                         blobStream.end(req.file.buffer);
+//                     }
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id Exercise",
+//                         data,
+//                     });
+//                 } else {
+//                     let exe = await db.Exercise.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (exe) {
+//                         exe.name = data.name,
+//                             exe.detail = data.detail,
+//                             exe.categoryId = data.categoryId,
+//                             exe.time = data.time,
+//                             exe.sickId = data.sickId,
+//                             exe.sickId1 = data.sickId1,
+//                             exe.sickId2 = data.sickId2,
+//                             exe.star = data.star,
+//                             exe.image = req.file.originalname,
+//                             await exe.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+//             else {
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id bệnh",
+//                         data,
+//                     });
+//                 } else {
+//                     let exe = await db.Exercise.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (exe) {
+//                         exe.name = data.name,
+//                             exe.detail = data.detail,
+//                             exe.categoryId = data.categoryId,
+//                             exe.time = data.time,
+//                             exe.star = data.star,
+//                             await exe.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
+// };
 let updateExeData = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (req.file) {
-                try {
-                    if (req.file) {
-                        console.log(req.file)
-                        const blob = buckket.file(req.file.originalname);
-                        const blobStream = blob.createWriteStream();
-                        await blobStream.on('finish', () => {
-                        })
-                        blobStream.end(req.file.buffer);
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
                 if (!data.id) {
                     resolve({
                         errCode: 1,
@@ -540,7 +797,7 @@ let updateExeData = (data, req) => {
                             exe.sickId1 = data.sickId1,
                             exe.sickId2 = data.sickId2,
                             exe.star = data.star,
-                            exe.image = req.file.originalname,
+                            exe.image = req.file.path,
                             await exe.save();
                         resolve({
                             errCode: 0,
@@ -599,7 +856,7 @@ let createExcelExe = (data) => {
                 await db.Exercise.create({
                     name: value.name,
                     detail: value.detail,
-                    image:value.image,
+                    image: value.image,
                     categoryId: Number(value.categoryId),
                     sickId: Number(value.sickId),
                     sickId1: Number(value.sickId1),
@@ -639,26 +896,45 @@ let deleteAllExe = (data) => {
 
 
 //Sick
+// let createNewSick = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             try {
+//                 if (req.file) {
+//                     const blob = buckket.file(req.file.originalname);
+//                     const blobStream = blob.createWriteStream();
+//                     await blobStream.on('finish', () => {
+//                     })
+//                     blobStream.end(req.file.buffer);
+//                 }
+//             } catch (error) {
+//                 console.log(error)
+//             }
+//             await db.Sick.create({
+//                 name: data.name,
+//                 tag: data.tag,
+//                 detail: data.detail,
+//                 arring: data.arring,
+//                 image: req.file.originalname,
+//             });
+//             resolve({
+//                 errCode: 0,
+//                 message: "Lưu thành công !",
+//             });
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
+// };
 let createNewSick = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
-            try {
-                if (req.file) {
-                    const blob = buckket.file(req.file.originalname);
-                    const blobStream = blob.createWriteStream();
-                    await blobStream.on('finish', () => {
-                    })
-                    blobStream.end(req.file.buffer);
-                }
-            } catch (error) {
-                console.log(error)
-            }
             await db.Sick.create({
                 name: data.name,
                 tag: data.tag,
                 detail: data.detail,
                 arring: data.arring,
-                image: req.file.originalname,
+                image: req.file.path,
             });
             resolve({
                 errCode: 0,
@@ -714,22 +990,94 @@ let deleteOneSick = (idSick) => {
         }
     });
 };
+// let updateSickData = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             if (req.file) {
+//                 try {
+//                     if (req.file) {
+//                         console.log(req.file)
+//                         const blob = buckket.file(req.file.originalname);
+//                         const blobStream = blob.createWriteStream();
+//                         await blobStream.on('finish', () => {
+//                         })
+//                         blobStream.end(req.file.buffer);
+//                     }
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id bệnh",
+//                         data,
+//                     });
+//                 } else {
+//                     let sick = await db.Sick.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (sick) {
+//                         sick.name = data.name,
+//                             sick.tag = data.tag,
+//                             sick.arring = data.arring,
+//                             sick.detail = data.detail,
+//                             sick.image = req.file.originalname,
+//                             await sick.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+//             else {
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id bệnh",
+//                         data,
+//                     });
+//                 } else {
+//                     let sick = await db.Sick.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (sick) {
+//                         sick.name = data.name,
+//                             sick.arring = data.arring,
+//                             sick.tag = data.tag,
+//                             sick.detail = data.detail,
+//                             await sick.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
+// };
 let updateSickData = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (req.file) {
-                try {
-                    if (req.file) {
-                        console.log(req.file)
-                        const blob = buckket.file(req.file.originalname);
-                        const blobStream = blob.createWriteStream();
-                        await blobStream.on('finish', () => {
-                        })
-                        blobStream.end(req.file.buffer);
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
                 if (!data.id) {
                     resolve({
                         errCode: 1,
@@ -747,7 +1095,7 @@ let updateSickData = (data, req) => {
                             sick.tag = data.tag,
                             sick.arring = data.arring,
                             sick.detail = data.detail,
-                            sick.image = req.file.originalname,
+                            sick.image = req.file.path,
                             await sick.save();
                         resolve({
                             errCode: 0,
@@ -865,28 +1213,49 @@ let createExcelBlog = (data) => {
         }
     });
 };
+// let createNewBlog = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             try {
+//                 if (req.file) {
+//                     const blob = buckket.file(req.file.originalname);
+//                     const blobStream = blob.createWriteStream();
+//                     await blobStream.on('finish', () => {
+//                     })
+//                     blobStream.end(req.file.buffer);
+//                 }
+//             } catch (error) {
+//                 console.log(error)
+//             }
+
+//             await db.Blog.create({
+//                 title: data.title,
+//                 categoryId: data.categoryId,
+//                 tag: data.tag,
+//                 star: Number(data.star),
+//                 detail: data.detail,
+//                 image: req.file.originalname,
+//             });
+//             resolve({
+//                 errCode: 0,
+//                 message: "Lưu thành công !",
+//             });
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
+// };
 let createNewBlog = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
-            try {
-                if (req.file) {
-                    const blob = buckket.file(req.file.originalname);
-                    const blobStream = blob.createWriteStream();
-                    await blobStream.on('finish', () => {
-                    })
-                    blobStream.end(req.file.buffer);
-                }
-            } catch (error) {
-                console.log(error)
-            }
-
+            console.log()
             await db.Blog.create({
                 title: data.title,
                 categoryId: data.categoryId,
                 tag: data.tag,
                 star: Number(data.star),
                 detail: data.detail,
-                image: req.file.originalname,
+                image: req.file.path,
             });
             resolve({
                 errCode: 0,
@@ -897,22 +1266,96 @@ let createNewBlog = (data, req) => {
         }
     });
 };
+// let updateBlogData = (data, req) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             if (req.file) {
+//                 try {
+//                     if (req.file) {
+//                         console.log(req.file)
+//                         const blob = buckket.file(req.file.originalname);
+//                         const blobStream = blob.createWriteStream();
+//                         await blobStream.on('finish', () => {
+//                         })
+//                         blobStream.end(req.file.buffer);
+//                     }
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id Blog",
+//                         data,
+//                     });
+//                 } else {
+//                     let blog = await db.Blog.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (blog) {
+//                         blog.title = data.title,
+//                             blog.categoryId = Number(data.categoryId),
+//                             blog.tag = data.tag,
+//                             blog.star = Number(data.star),
+//                             blog.detail = data.detail,
+//                             blog.image = req.file.originalname,
+//                             await blog.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+//             else {
+//                 if (!data.id) {
+//                     resolve({
+//                         errCode: 1,
+//                         message: "Không có id Blog",
+//                         data,
+//                     });
+//                 } else {
+//                     let blog = await db.Blog.findOne({
+//                         where: {
+//                             id: data.id,
+//                         },
+//                     });
+//                     if (blog) {
+//                         blog.title = data.title,
+//                             blog.categoryId = Number(data.categoryId),
+//                             blog.tag = data.tag,
+//                             blog.star = Number(data.star),
+//                             blog.detail = data.detail,
+//                             await blog.save();
+//                         resolve({
+//                             errCode: 0,
+//                             message: "Đã sửa ",
+//                         });
+//                     } else {
+//                         resolve({
+//                             errCode: 2,
+//                             message: "Không sửa được !",
+//                         });
+//                     }
+//                 }
+//             }
+
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
+// };
 let updateBlogData = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (req.file) {
-                try {
-                    if (req.file) {
-                        console.log(req.file)
-                        const blob = buckket.file(req.file.originalname);
-                        const blobStream = blob.createWriteStream();
-                        await blobStream.on('finish', () => {
-                        })
-                        blobStream.end(req.file.buffer);
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
                 if (!data.id) {
                     resolve({
                         errCode: 1,
@@ -931,7 +1374,7 @@ let updateBlogData = (data, req) => {
                             blog.tag = data.tag,
                             blog.star = Number(data.star),
                             blog.detail = data.detail,
-                            blog.image = req.file.originalname,
+                            blog.image = req.file.path,
                             await blog.save();
                         resolve({
                             errCode: 0,
@@ -1308,23 +1751,38 @@ let updateUserData = (data) => {
         }
     });
 };
-let deleteUserData = (idUser) => {
+let deleteUserData = (idUser, token) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let user = await db.User.findOne({ where: { id: idUser } });
-            if (!user) {
-                resolve({
-                    errCode: 1,
-                    message: "Không tồn tại !",
-                    idUser,
-                });
+            let vT = {};
+            let message = "";
+            let errCode = 0;
+            let roleId = 0;
+            try {
+                vT = verifyToken(token);
+            } catch (error) {
+                message = "JWT Fall";
             }
-            await db.User.destroy({
-                where: { id: idUser },
-            });
+            if (vT !== null && vT.roleID) {
+                roleId = vT.roleID;
+            }
+            if (roleId == 1) {
+                let user = await db.User.findOne({ where: { id: idUser } });
+                if (!user) {
+                    errCode = 1;
+                    message = "Không tồn tại !";
+                }
+                await db.User.destroy({
+                    where: { id: idUser },
+                });
+                message = "Đã xóa!";
+            } else {
+                errCode = 2;
+                message = "Không có quyền!";
+            }
             resolve({
-                errCode: 0,
-                message: "Xóa thành công !",
+                errCode,
+                message,
                 idUser,
             });
         } catch (error) {

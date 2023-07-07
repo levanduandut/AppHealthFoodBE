@@ -111,7 +111,7 @@ let handleDeleteAllExe = async (req, res) => {
 
 //Sick
 let handleCreateNewSick = async (req, res) => {
-    let message = await adminService.createNewSick(req.body, req.file.filename, req);
+    let message = await adminService.createNewSick(req.body, req);
     return res.status(200).json(message);
 }
 let handleCreateExcelSick = async (req, res) => {
@@ -141,7 +141,7 @@ let handleDeleteAllSick = async (req, res) => {
 
 //Blog
 let handleCreateNewBlog = async (req, res) => {
-    let message = await adminService.createNewBlog(req.body, req.file.filename, req);
+    let message = await adminService.createNewBlog(req.body, req);
     return res.status(200).json(message);
 }
 let handleCreateExcelBlog = async (req, res) => {
@@ -165,7 +165,7 @@ let handleDeleteOneBlog = async (req, res) => {
 }
 let handleEditBlog = async (req, res) => {
     let data = req.body;
-    let message = await adminService.updateBlogData(data, req.file.filename, req);
+    let message = await adminService.updateBlogData(data, req);
     return res.status(200).json(message);
 }
 
@@ -219,8 +219,9 @@ let handleEditUser = async (req, res) => {
 }
 let handleDeleteUser = async (req, res) => {
     let idUser = req.body.id;
-    if (idUser) {
-        let mes = await adminService.deleteUserData(idUser);
+    let token = req.body.token;
+    if (idUser && token) {
+        let mes = await adminService.deleteUserData(idUser, token);
         return res.status(200).json(mes);
     } else {
         return res.status(200).json({

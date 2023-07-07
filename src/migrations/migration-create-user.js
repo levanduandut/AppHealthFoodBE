@@ -21,9 +21,6 @@ module.exports = {
       fullName: {
         type: Sequelize.STRING
       },
-      avatar: {
-        type: Sequelize.STRING
-      },
       gender: {
         type: Sequelize.INTEGER
       },

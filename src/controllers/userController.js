@@ -1,13 +1,12 @@
 import userService from "../services/userService";
-const { Translate } = require('@google-cloud/translate').v2;
 require('dotenv').config();
 
 // Instantiates a client
-const XTRAN = JSON.parse(process.env.CODETRANSLATE)
-const translate = new Translate({
-    credentials: XTRAN,
-    projectId: XTRAN.project_id
-});
+// const XTRAN = JSON.parse(process.env.CODETRANSLATE)
+// const translate = new Translate({
+//     credentials: XTRAN,
+//     projectId: XTRAN.project_id
+// });
 let handleEditInfo = async (req, res) => {
     let data = req.body;
     let token = req.body.token;
@@ -112,10 +111,10 @@ let handleGetExercise = async (req, res) => {
 
 let handleTransale = async (req, res) => {
     try {
-        let data = await translate.translate(req.body.text, req.body.lang);
+        let data = await userService.translateLang(req.body.text, req.body.lang);
         return res.status(500).json({
             errCode: 0,
-            data: data[0],
+            data: data,
         })
     } catch (error) {
         return res.status(200).json({
