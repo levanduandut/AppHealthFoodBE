@@ -893,8 +893,6 @@ let deleteAllExe = (data) => {
     });
 }
 
-
-
 //Sick
 // let createNewSick = (data, req) => {
 //     return new Promise(async (resolve, reject) => {
@@ -1248,7 +1246,6 @@ let createExcelBlog = (data) => {
 let createNewBlog = (data, req) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log()
             await db.Blog.create({
                 title: data.title,
                 categoryId: data.categoryId,
@@ -1754,19 +1751,9 @@ let updateUserData = (data) => {
 let deleteUserData = (idUser, token) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let vT = {};
-            let message = "";
-            let errCode = 0;
-            let roleId = 0;
-            try {
-                vT = verifyToken(token);
-            } catch (error) {
-                message = "JWT Fall";
-            }
-            if (vT !== null && vT.roleID) {
-                roleId = vT.roleID;
-            }
-            if (roleId == 1) {
+            let { message, errCode, checkUserRole } = getUserRole(token);
+            console.log(checkUserRole);
+            if (checkUserRole) {
                 let user = await db.User.findOne({ where: { id: idUser } });
                 if (!user) {
                     errCode = 1;
@@ -1829,6 +1816,25 @@ let verifyToken = (token) => {
     }
     return data;
 }
+
+//Chekcrole
+const getUserRole = (token) => {
+    let vT = {};
+    let message = "";
+    let errCode = 0;
+    let roleId = 0;
+    try {
+        vT = verifyToken(token);
+    } catch (error) {
+        message = "JWT Fall";
+    }
+    if (vT !== null && vT.roleID) {
+        roleId = vT.roleID;
+    }
+    let checkUserRole = roleId == 1;
+    return { message, errCode, checkUserRole };
+};
+
 module.exports = {
     createNewUser,
     getAllUser,

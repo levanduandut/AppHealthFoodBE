@@ -7,35 +7,34 @@ import jwt from 'jsonwebtoken';
 require("dotenv").config()
 const salt = bcrypt.genSaltSync(10);
 import axios from "axios";
-const encodedParams = new URLSearchParams();
-encodedParams.set('to_lang', 'en');
-encodedParams.set('from_lang', 'vi');
-
-
 
 let translateLang = async (text, lang) => {
-
     return new Promise(async (resolve, reject) => {
         try {
-            encodedParams.set('text', text);
+            const encodedParams = new URLSearchParams();
+            encodedParams.set('target', 'en');
+            encodedParams.set('source', 'vi');
+            encodedParams.set('q', text);
             const options = {
                 method: 'POST',
-                url: `${process.env.URLTRANSLATE}`,
+                url: process.env.URLTRANSLATE,
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
-                    'X-RapidAPI-Key': `${process.env.KEY_TRANS}`,
-                    'X-RapidAPI-Host': `${process.env.HOST_TRANS}`
+                    'Accept-Encoding': 'application/gzip',
+                    'X-RapidAPI-Key': process.env.KEY_TRANS,
+                    'X-RapidAPI-Host': process.env.HOST_TRANS
                 },
                 data: encodedParams,
             };
             try {
                 const response = await axios.request(options);
-                let x = response.data.translated_text;
+                let x = response.data.data.translations[0].translatedText;
                 resolve(x);
+
             } catch (error) {
                 resolve({
-                    errCode : 1
-                });
+                    errCode: 1,
+                })
             }
         } catch (error) {
             reject(error);
@@ -153,51 +152,50 @@ let getSickIngredient = (sickId) => {
             let unwantedFields = ['id', 'updatedAt', 'createdAt', 'category', 'name', 'unit'];
             let filteredFields = fields.filter(field => !unwantedFields.includes(field));
             if (arr.arring !== null) {
-                let numbersString = arr.arring;
-                let numbersArray = numbersString.split(",").map(Number);
-                let positiveNumbers = [];
-                let negativeNumbers = [];
-                for (let i = 0; i < numbersArray.length; i++) {
-                    let number = numbersArray[i];
-                    if (number > 0) {
-                        positiveNumbers.push(number);
-                    } else if (number < 0) {
-                        negativeNumbers.push(number);
+                let arringItems = arr.arring.split(","); // Tách các phần tử trong chuỗi thành mảng
+                let sortingExpressionX = "";
+                let sortingExpressionY = "";
+
+                for (let i = 0; i < arringItems.length; i++) {
+                    let item = arringItems[i].trim(); // Xóa khoảng trắng đầu và cuối
+                    let [fieldIndex, multiplier = 1] = item.split(":"); // Tách số cũ và hệ số nhân
+                    let fieldName = filteredFields[Math.abs(parseInt(fieldIndex))]; // Lấy tên trường từ filteredFields
+                    let expression = `(${fieldName} * ${multiplier})`; // Biểu thức sắp xếp cho mỗi phần tử
+                    if (parseInt(fieldIndex) >= 0) {
+                        if (sortingExpressionX !== "") {
+                            sortingExpressionX += " + ";
+                        }
+                        sortingExpressionX += expression;
+                    } else {
+                        if (sortingExpressionY !== "") {
+                            sortingExpressionY += " + ";
+                        }
+                        sortingExpressionY += expression;
                     }
                 }
-                let sumExpressionX = positiveNumbers.map(num => filteredFields[num]).join(' + ');
-                if (positiveNumbers) {
+
+                if (sortingExpressionX !== "") {
                     datax = await db.Ingredient.findAll({
                         limit: 10,
                         where: {},
                         raw: true,
-                        order: [[db.sequelize.literal(`(${sumExpressionX}) DESC`)]]
+                        order: [[db.sequelize.literal(`(${sortingExpressionX}) DESC`)]]
                     });
                 }
-                let result = [];
-                for (let i = 0; i < negativeNumbers.length; i++) {
-                    let soDuong = Math.abs(negativeNumbers[i]); // Lấy giá trị tuyệt đối của phần tử
-                    result.push(soDuong);
+
+                if (sortingExpressionY !== "") {
+                    datay = await db.Ingredient.findAll({
+                        limit: 7,
+                        where: {},
+                        raw: true,
+                        order: [[db.sequelize.literal(`(${sortingExpressionY}) DESC`)]]
+                    });
                 }
-                let datay;
-                if (result === null) {
-                    datay = null;
-                } else {
-                    let sumExpressionY = result.map(num => filteredFields[num]).join(' + ');
-                    if (negativeNumbers) {
-                        datay = await db.Ingredient.findAll({
-                            limit: 7,
-                            where: {},
-                            raw: true,
-                            order: [[db.sequelize.literal(`(${sumExpressionY}) DESC`)]]
-                        });
-                    }
-                }
-                data = {
-                    should: datax,
-                    shouldnot: datay
-                };
             }
+            data = {
+                should: datax,
+                shouldnot: datay
+            };
             resolve(data);
         } catch (error) {
             reject(error);

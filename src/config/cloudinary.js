@@ -11,6 +11,8 @@ const storage = new CloudinaryStorage({
     allowedFormats: ['jpg', 'png', 'jpeg'],
     params: {
         folder: 'healthfood',
+        // use_filename: true,
+        // unique_filename: false,
         // format: async (req, file) => 'png', // supports promises as well
         // public_id: (req, file) => 'computed-filename-using-request',
     },

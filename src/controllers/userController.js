@@ -110,17 +110,11 @@ let handleGetExercise = async (req, res) => {
 };
 
 let handleTransale = async (req, res) => {
-    try {
-        let data = await userService.translateLang(req.body.text, req.body.lang);
-        return res.status(500).json({
-            errCode: 0,
-            data: data,
-        })
-    } catch (error) {
-        return res.status(200).json({
-            errCode: 1,
-        });
-    }
+    let data = await userService.translateLang(req.body.text, req.body.lang);
+    return res.status(500).json({
+        errCode: 0,
+        data: data,
+    })
 }
 let handleLogin = async (req, res) => {
     let email = req.body.email;
